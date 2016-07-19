@@ -20,7 +20,7 @@ import javax.swing.JOptionPane;
  * @author MarceloMartinsVilara
  */
 public class ConexaoBD {
-
+   int number = 1;
     private String schema = "projetoclinicavilara";
     private String usuario = "root";
     private String senha = "";
