@@ -261,8 +261,14 @@ public class FormMedico extends javax.swing.JFrame {
     }//GEN-LAST:event_jComboBoxEspecialidadeMedActionPerformed
 
     private void jButtonSalvarMedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSalvarMedActionPerformed
-
-        if (flag == 1) {   // caso o comando seja inserir novo registro         
+        if(jTextFieldCadNomeMed.getText().isEmpty()){
+            JOptionPane.showMessageDialog(null, "Favor preencher o campo nome!");
+            jTextFieldCadNomeMed.requestFocus();
+        }else if(jTextFieldCadCrmMed.getText().isEmpty()){
+            JOptionPane.showMessageDialog(null, "Favor preencher o campo CRM!");
+            jTextFieldCadCrmMed.requestFocus();
+        }
+        else if (flag == 1) {   // caso o comando seja inserir novo registro         
 
             mod.setNome(jTextFieldCadNomeMed.getText());
             mod.setEspecialidade((String) jComboBoxEspecialidadeMed.getSelectedItem());
@@ -287,6 +293,13 @@ public class FormMedico extends javax.swing.JFrame {
             jComboBoxEspecialidadeMed.setEnabled(false);
             jButtonSalvarMed.setEnabled(false);
             jButtonCancelarMed.setEnabled(false);
+            try {
+                preencherTabela("SELECT * FROM medicos");
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(FormMedico.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (SQLException ex) {
+                Logger.getLogger(FormMedico.class.getName()).log(Level.SEVERE, null, ex);
+            }
         } else if (flag == 2) {  // caso para o comando de editar registro
             mod.setCod(Integer.valueOf(jTextFieldIdMedico.getText()));
             mod.setCrm(Integer.valueOf(jTextFieldCadCrmMed.getText()));
@@ -311,6 +324,13 @@ public class FormMedico extends javax.swing.JFrame {
             jButtonCadNovoMed.setEnabled(true);
             jTextFieldPesquisa.setEnabled(true);
             jButtonPesquisarMed.setEnabled(true);
+            try {
+                preencherTabela("SELECT * FROM medicos");
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(FormMedico.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (SQLException ex) {
+                Logger.getLogger(FormMedico.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
 
 
@@ -344,6 +364,10 @@ public class FormMedico extends javax.swing.JFrame {
             jTextFieldCadNomeMed.setText(model.getNome());
             jComboBoxEspecialidadeMed.setSelectedItem(model.getEspecialidade());
             jTextFieldCadCrmMed.setText(String.valueOf(model.getCrm()));
+            
+            preencherTabela("SELECT * FROM medicos WHERE nome_medico like '%"+jTextFieldPesquisa.getText()+"%'");
+            
+            
             jButtonEditMed.setEnabled(true);
             jButtonExcluirMed.setEnabled(true);
         } catch (ClassNotFoundException ex) {
@@ -422,15 +446,22 @@ public class FormMedico extends javax.swing.JFrame {
             jButtonCadNovoMed.setEnabled(true);
             jTextFieldPesquisa.setEnabled(true);
             jButtonPesquisarMed.setEnabled(true);
+            try {
+                preencherTabela("SELECT * FROM medicos");
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(FormMedico.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (SQLException ex) {
+                Logger.getLogger(FormMedico.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
 
     }//GEN-LAST:event_jButtonExcluirMedActionPerformed
 
     private void jTableMedicosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableMedicosMouseClicked
-        String nome_medico = ""+jTableMedicos.getValueAt(jTableMedicos.getSelectedRow(), 1);
+        String id_medico = ""+jTableMedicos.getValueAt(jTableMedicos.getSelectedRow(), 0);
         try {
             con.conect();
-            con.executaSql("SELECT * FROM medicos WHERE nome_medico='"+nome_medico+"'");
+            con.executaSql("SELECT * FROM medicos WHERE idMedicos="+id_medico+"");
             con.rs.first();
             jTextFieldCadNomeMed.setText(con.rs.getString("nome_medico"));
             jTextFieldIdMedico.setText(String.valueOf(con.rs.getInt("idMedicos")));
