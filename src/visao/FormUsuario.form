@@ -273,6 +273,9 @@
                   <Table columnCount="0" rowCount="4"/>
                 </Property>
               </Properties>
+              <Events>
+                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jTableUsuariosMouseClicked"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>

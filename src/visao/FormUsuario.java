@@ -144,6 +144,11 @@ public class FormUsuario extends javax.swing.JFrame {
 
             }
         ));
+        jTableUsuarios.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTableUsuariosMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(jTableUsuarios);
 
         jLabel2.setText("ID:");
@@ -477,6 +482,36 @@ public class FormUsuario extends javax.swing.JFrame {
             }
         }        // TODO add your handling code here:
     }//GEN-LAST:event_jButtonExcluirUsuActionPerformed
+
+    private void jTableUsuariosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableUsuariosMouseClicked
+            String id_usu = ""+jTableUsuarios.getValueAt(jTableUsuarios.getSelectedRow(), 0);
+        try {
+            coc.conect();
+            coc.executaSql("SELECT * FROM usuarios WHERE usu_cod="+id_usu+"");
+            coc.rs.first();
+            jTextFieldUsuario.setText(coc.rs.getString("usu_nome"));
+            jPasswordFieldSenha.setText(String.valueOf(coc.rs.getInt("usu_senha")));
+            jPasswordFieldConfSenha.setText(String.valueOf(coc.rs.getInt("usu_senha")));
+            jComboBoxTipo.setSelectedItem(coc.rs.getString("usu_tipo"));
+            jLabelIdUsuario.setText(String.valueOf(coc.rs.getInt("usu_cod")));
+            jButtonExcluirUsu.setEnabled(true);
+            jButtonEditUsu.setEnabled(true);
+            jButtonCancelarUsu.setEnabled(true);
+            jTextFieldPesqUsuario.setEnabled(false);
+            jButtonPesqUsuario.setEnabled(false);
+            jButtonNovoUsu.setEnabled(false);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(FormUsuario.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(FormUsuario.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        try {
+            coc.desconecta();
+        } catch (SQLException ex) {
+            Logger.getLogger(FormMedico.class.getName()).log(Level.SEVERE, null, ex);
+        }        // TODO add your handling code here:
+    }//GEN-LAST:event_jTableUsuariosMouseClicked
    
 
      public void preencherTabela(String Sql) throws ClassNotFoundException, SQLException{
