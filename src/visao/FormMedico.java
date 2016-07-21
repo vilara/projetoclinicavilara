@@ -519,7 +519,7 @@ public class FormMedico extends javax.swing.JFrame {
         jTableMedicos.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);  // só seleciona um campo por vez
         con.desconecta();
         
-        
+       
     }
     
     public static void main(String args[]) {
