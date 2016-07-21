@@ -99,11 +99,12 @@ public class TelaLogin extends javax.swing.JFrame {
         }
         
         try {
-        coc.executaSql("SELECT * FROM usuarios WHERE usu_nome='"+jTextFieldUsuario.getText()+"'");
+            
+            coc.executaSql("SELECT * FROM usuarios WHERE usu_nome='"+jTextFieldUsuario.getText()+"'");
             coc.rs.first();
             if(coc.rs.getString("usu_senha").equals(String.valueOf(jPasswordFieldSenha.getPassword()))){
-             TelaPrincipal t1 = new TelaPrincipal();            
-            t1.setVisible(true);
+            TelaPrincipal tela = new TelaPrincipal(coc.rs.getString("usu_tipo"));  // manda o tipo de usuário pata tela principal          
+            tela.setVisible(true);
             this.dispose();   
             }else{
                 JOptionPane.showMessageDialog(null, "Usuário ou senha inválidos");
@@ -111,6 +112,8 @@ public class TelaLogin extends javax.swing.JFrame {
             
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "Usuário ou senha inválidos");
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(TelaLogin.class.getName()).log(Level.SEVERE, null, ex);
         }
         
         

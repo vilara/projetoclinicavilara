@@ -11,32 +11,28 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import modeloConnsection.ConexaoBD;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 /**
  *
  * @author MarceloMartinsVilara
  */
 public class TelaPrincipal extends javax.swing.JFrame {
-
-   
-    
- 
-
-   
+   ConexaoBD conecta = new ConexaoBD();
     /**
      * Creates new form TelaPrincipal
      */
-    public TelaPrincipal() {
+    public TelaPrincipal(String usuario) throws ClassNotFoundException, SQLException {
        initComponents();
+       jLabelTipoUsu.setText(usuario);
+       conecta.conect();
        
     }
 
- 
+    private TelaPrincipal() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 
-   
-    
-    
-   
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -101,6 +97,11 @@ public class TelaPrincipal extends javax.swing.JFrame {
 
         jButtonCadPacientes.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/cadPacientes.png"))); // NOI18N
         jButtonCadPacientes.setToolTipText("Pacientes");
+        jButtonCadPacientes.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonCadPacientesActionPerformed(evt);
+            }
+        });
         jPanelInternal.add(jButtonCadPacientes);
         jButtonCadPacientes.setBounds(240, 50, 110, 120);
 
@@ -161,6 +162,11 @@ public class TelaPrincipal extends javax.swing.JFrame {
         jMenuCadastro.add(jMenuCadPaciente);
 
         jMenuCadUsuarios.setText("Usuários");
+        jMenuCadUsuarios.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuCadUsuariosActionPerformed(evt);
+            }
+        });
         jMenuCadastro.add(jMenuCadUsuarios);
 
         jMenuBar1.add(jMenuCadastro);
@@ -204,19 +210,22 @@ public class TelaPrincipal extends javax.swing.JFrame {
 
     private void jButtonCadMedicosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCadMedicosActionPerformed
        FormMedico telaMedico;
-        try {
-            telaMedico = new FormMedico();
-            telaMedico.setVisible(true);
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(TelaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SQLException ex) {
-            Logger.getLogger(TelaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+     if(tela == null){  // usado para não deixar abrir mais de uma tela de usuário
+            tela = new FormUsuario();
+         tela.setVisible(true); 
+         tela.setResizable(false);
+        }else{
+         tela.setVisible(true); 
+         tela.setResizable(false); 
         }
        
     }//GEN-LAST:event_jButtonCadMedicosActionPerformed
 
     private void jMenuItemCadMedicoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemCadMedicoActionPerformed
-        FormMedico telaMedico;
+        
+        if(jLabelTipoUsu.getText().equals("Administrador")){
+            
+             FormMedico telaMedico;
         try {
             telaMedico = new FormMedico();
              telaMedico.setVisible(true);
@@ -224,18 +233,55 @@ public class TelaPrincipal extends javax.swing.JFrame {
             Logger.getLogger(TelaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SQLException ex) {
             Logger.getLogger(TelaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+        } 
+            
+        }else{
+            JOptionPane.showMessageDialog(null, "Você não tem permissão para acessar esta funcnionalidade.\nPor favor entre em contato com um administrador do sistema.");
         }
+        
+        
+      
       
     }//GEN-LAST:event_jMenuItemCadMedicoActionPerformed
 
     private void jMenuSairMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenuSairMouseClicked
         System.exit(0); // fecha o sistema por completo
     }//GEN-LAST:event_jMenuSairMouseClicked
+    FormUsuario tela = new FormUsuario();  // usado para não deixar abrir mais de uma tela de usuário
+    private void jMenuCadUsuariosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuCadUsuariosActionPerformed
+      
+        if(jLabelTipoUsu.getText().equals("Administrador")){
+        if(tela == null){  // usado para não deixar abrir mais de uma tela de usuário
+            tela = new FormUsuario();
+         tela.setVisible(true); 
+         tela.setResizable(false);
+        }else{
+         tela.setVisible(true); 
+         tela.setResizable(false); 
+        }
+        
+         }else{
+            JOptionPane.showMessageDialog(null, "Você não tem permissão para acessar esta funcnionalidade.\nPor favor entre em contato com um administrador do sistema.");
+        }
+        
+        
+    }//GEN-LAST:event_jMenuCadUsuariosActionPerformed
+
+    private void jButtonCadPacientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCadPacientesActionPerformed
+         if(tela == null){  // usado para não deixar abrir mais de uma tela de usuário
+            tela = new FormUsuario();
+         tela.setVisible(true); 
+         tela.setResizable(false);
+        }else{
+         tela.setVisible(true); 
+         tela.setResizable(false); 
+        }
+    }//GEN-LAST:event_jButtonCadPacientesActionPerformed
 
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
+    public static void telaprincipal(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
