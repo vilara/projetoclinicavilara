@@ -27,9 +27,13 @@ public class TelaPrincipal extends javax.swing.JFrame {
      * Creates new form TelaPrincipal
      */
     public TelaPrincipal() {
-        initComponents();
-    
+       initComponents();
+       
     }
+
+ 
+
+   
     
     
    
@@ -53,6 +57,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
         jButtonFecharBemVindo = new javax.swing.JButton();
         jLabelFundo = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
+        jLabelTipoUsu = new javax.swing.JLabel();
         jLabelFundoPrincipal = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenuCadastro = new javax.swing.JMenu();
@@ -131,7 +136,9 @@ public class TelaPrincipal extends javax.swing.JFrame {
         jLabel1.setBounds(20, 10, 330, 22);
 
         getContentPane().add(jInternalFrameTelaBemvindo);
-        jInternalFrameTelaBemvindo.setBounds(10, 70, 930, 390);
+        jInternalFrameTelaBemvindo.setBounds(10, 40, 930, 390);
+        getContentPane().add(jLabelTipoUsu);
+        jLabelTipoUsu.setBounds(30, 440, 110, 20);
 
         jLabelFundoPrincipal.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/fundo_telaprincipal.jpg"))); // NOI18N
         getContentPane().add(jLabelFundoPrincipal);
@@ -272,6 +279,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabelFundo;
     private javax.swing.JLabel jLabelFundoPrincipal;
+    private javax.swing.JLabel jLabelTipoUsu;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuCadClientes;
     private javax.swing.JMenuItem jMenuCadPaciente;

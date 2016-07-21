@@ -5,14 +5,18 @@
  */
 package visao;
 
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import modeloConnsection.ConexaoBD;
 
 /**
  *
  * @author MarceloMartinsVilara
  */
 public class TelaLogin extends javax.swing.JFrame {
-
+    ConexaoBD coc = new ConexaoBD();
     /**
      * Creates new form TelaLogin
      */
@@ -86,13 +90,36 @@ public class TelaLogin extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void JButtonAcessarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JButtonAcessarActionPerformed
-
-        if (jTextFieldUsuario.getText().equals("admin") && String.valueOf(jPasswordFieldSenha.getPassword()).equals("1234")) {
-            TelaPrincipal t1 = new TelaPrincipal();
-            this.dispose();
+        try {
+            coc.conect();
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(TelaLogin.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(TelaLogin.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        try {
+        coc.executaSql("SELECT * FROM usuarios WHERE usu_nome='"+jTextFieldUsuario.getText()+"'");
+            coc.rs.first();
+            if(coc.rs.getString("usu_senha").equals(String.valueOf(jPasswordFieldSenha.getPassword()))){
+             TelaPrincipal t1 = new TelaPrincipal();            
             t1.setVisible(true);
-        } else {
-            JOptionPane.showMessageDialog(null, "Usuário ou senha incorretos");
+            this.dispose();   
+            }else{
+                JOptionPane.showMessageDialog(null, "Usuário ou senha inválidos");
+            }
+            
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Usuário ou senha inválidos");
+        }
+        
+        
+        try {
+            coc.desconecta();
+            
+      
+        } catch (SQLException ex) {
+            Logger.getLogger(TelaLogin.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_JButtonAcessarActionPerformed
 
