@@ -5,17 +5,33 @@
  */
 package visao;
 
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import modeloBeans.BeansPaciente;
+import modeloConnsection.ConexaoBD;
+import modeloDao.DaoPaciente;
+
 /**
  *
  * @author MarceloMartinsVilara
  */
 public class FormPaciente extends javax.swing.JFrame {
-
-    /**
-     * Creates new form FormPaciente
-     */
+    
+    ConexaoBD conecta = new ConexaoBD();
+     BeansPaciente usu = new BeansPaciente();
+     DaoPaciente mod = new DaoPaciente();
+     
     public FormPaciente() {
         initComponents();
+        try {
+            preencherbairros();
+        } catch (ClassNotFoundException ex) {
+            JOptionPane.showMessageDialog(null, "Erro ao preencher os nomes dos bairros");
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Erro ao preencher os nomes dos bairros");
+        }
     }
 
     /**
@@ -186,6 +202,11 @@ public class FormPaciente extends javax.swing.JFrame {
         jButtonNovoPaciente.setText("NOVO");
 
         jButtonSalvarPaciente.setText("SALVAR");
+        jButtonSalvarPaciente.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonSalvarPacienteActionPerformed(evt);
+            }
+        });
 
         jButtonCancelarPaciente.setText("CANCELAR");
 
@@ -229,10 +250,9 @@ public class FormPaciente extends javax.swing.JFrame {
                         .addGroup(jPanel1Layout.createSequentialGroup()
                             .addGap(21, 21, 21)
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(jLabel13)
-                                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 834, Short.MAX_VALUE))
-                            .addGap(10, 10, 10)))
+                                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 863, Short.MAX_VALUE))))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(169, 169, 169)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -304,7 +324,7 @@ public class FormPaciente extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(25, 25, 25)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(45, Short.MAX_VALUE))
+                .addContainerGap(26, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -319,10 +339,64 @@ public class FormPaciente extends javax.swing.JFrame {
         setSize(new java.awt.Dimension(990, 592));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
-
+    public void preencherbairros() throws ClassNotFoundException, SQLException{
+        conecta.conect();
+        
+        conecta.executaSql("SELECT * FROM bairro ORDER BY bairro_nome");
+        conecta.rs.first();
+        jComboBoxBairroPaciente.removeAllItems();
+        do {
+            jComboBoxBairroPaciente.addItem(conecta.rs.getString("bairro_nome")); // preenchimento automático do combobox de bairros buscando do banco de dados
+        } while (conecta.rs.next());
+        
+        conecta.desconecta();
+    }
     private void jTextFieldNomePacienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldNomePacienteActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextFieldNomePacienteActionPerformed
+
+    private void jButtonSalvarPacienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSalvarPacienteActionPerformed
+        try {
+            conecta.conect();
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(FormPaciente.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(FormPaciente.class.getName()).log(Level.SEVERE, null, ex);
+        }
+           
+        
+        usu.setPac_nome(jTextFieldNomePaciente.getText());
+        usu.setPac_nascimento(String.valueOf(jFormattedTextFieldNascimentoPaciente.getText()));
+        usu.setPac_rg(String.valueOf(jFormattedTextFieldRgPaciente.getText()));
+        usu.setPac_email(String.valueOf(jFormattedTextFieldEmailPaciente.getText()));
+        usu.setPac_telefone(jTextFieldTelePaciente.getText());
+        usu.setPac_rua(jTextFieldRuaPaciente.getText());
+        usu.setPac_nr(Integer.valueOf(jTextFieldNrPaciente.getText()));
+        usu.setPac_complemento(jTextFieldComplemPaciente.getText());
+        usu.setPac_bairro(String.valueOf(jComboBoxBairroPaciente.getSelectedItem()));
+        usu.setPac_cidade(jTextFieldCidadePaciente.getText());
+        usu.setPac_estado(jTextFieldEstadoPaciente.getText());
+        
+        try {
+            mod.salvar(usu);
+            JOptionPane.showMessageDialog(null, "Paciente inserido com sucesso");
+        } catch (ClassNotFoundException ex) {
+        JOptionPane.showMessageDialog(null, "Erro ao inserir paciente\n"+ex.getMessage());
+        } catch (SQLException ex) {
+             JOptionPane.showMessageDialog(null, "Erro ao inserir paciente\n"+ex.getMessage());
+        }
+        
+        
+        
+        
+        
+        
+        try {
+            conecta.desconecta();
+        } catch (SQLException ex) {
+            Logger.getLogger(FormPaciente.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_jButtonSalvarPacienteActionPerformed
 
     /**
      * @param args the command line arguments
