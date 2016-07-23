@@ -55,14 +55,22 @@ public class DaoPaciente {
     }
     
     
-      public void editar(BeansUsuario mod) throws ClassNotFoundException, SQLException {
+      public void editar(BeansPaciente mod) throws ClassNotFoundException, SQLException {
         conex.conect();
         try{
-         PreparedStatement stmt = conex.coc.prepareStatement("UPDATE usuarios SET usu_nome=?, usu_senha=?, usu_tipo=? WHERE usu_cod=?");
-        stmt.setString(1, mod.getNome_usu());
-        stmt.setString(2, mod.getSenha_usu());
-        stmt.setString(3, mod.getTipo_usu());
-        stmt.setInt(4, mod.getCod_usu());
+        PreparedStatement stmt = conex.coc.prepareStatement("UPDATE pacientes SET pac_nome=?, pac_nascimento=?, pac_rg=?, pac_email=?, pac_telefone=?, pac_rua=?, pac_nr=?, pac_complemento=?, pac_bairro=?, pac_cidade=?, pac_estado=? WHERE idPaciente=?");
+        stmt.setString(1, mod.getPac_nome());
+        stmt.setString(2, mod.getPac_nascimento());
+        stmt.setString(3, mod.getPac_rg());
+        stmt.setString(4, mod.getPac_email());
+        stmt.setString(5, mod.getPac_telefone());
+        stmt.setString(6, mod.getPac_rua());
+        stmt.setInt(7, mod.getPac_nr());        
+        stmt.setString(8, mod.getPac_complemento());
+        stmt.setString(9, mod.getPac_bairro());
+        stmt.setString(10, mod.getPac_cidade());
+        stmt.setString(11, mod.getPac_estado());
+        stmt.setInt(12, mod.getIdPaciente());
         stmt.execute();
         
         }catch(SQLException ex){
@@ -88,18 +96,17 @@ public class DaoPaciente {
         conex.desconecta();
     }
     
-        public BeansUsuario buscaUsuario(BeansUsuario mod) throws ClassNotFoundException, SQLException {
+        public BeansPaciente buscaPac(BeansPaciente mod) throws ClassNotFoundException, SQLException {
 
         conex.conect();        // conecta com o banco de dados
 
-        conex.executaSql("SELECT * FROM usuarios WHERE usu_nome like'%" + mod.getPesquisa_usu() + "%'");
+        conex.executaSql("SELECT * FROM pacientes WHERE pac_nome like'%" + mod.getPac_nome() + "%'");
 
         try {
             conex.rs.first();
-            mod.setCod_usu(conex.rs.getInt("usu_cod"));
-            mod.setNome_usu(conex.rs.getString("usu_nome"));
-            mod.setSenha_usu(conex.rs.getString("usu_senha"));
-            mod.setTipo_usu(conex.rs.getString("usu_tipo"));
+            mod.setIdPaciente(conex.rs.getInt("idPaciente"));
+            mod.setPac_nome(conex.rs.getString("pac_nome"));
+           
         } catch (SQLException ex) {
             if(ex.getMessage().equals("Illegal operation on empty result set.")){
                 JOptionPane.showMessageDialog(null, "Não existe registro para esta consulta");

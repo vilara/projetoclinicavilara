@@ -6,6 +6,7 @@
 package visao;
 
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -19,7 +20,7 @@ import modeloDao.DaoPaciente;
  */
 public class FormPaciente extends javax.swing.JFrame {
     
-    ConexaoBD conecta = new ConexaoBD();
+     ConexaoBD conecta = new ConexaoBD();
      BeansPaciente usu = new BeansPaciente();
      DaoPaciente mod = new DaoPaciente();
      
@@ -51,7 +52,6 @@ public class FormPaciente extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jTextFieldNomePaciente = new javax.swing.JTextField();
-        jFormattedTextFieldNascimentoPaciente = new javax.swing.JFormattedTextField();
         jFormattedTextFieldRgPaciente = new javax.swing.JFormattedTextField();
         jFormattedTextFieldEmailPaciente = new javax.swing.JFormattedTextField();
         jLabel5 = new javax.swing.JLabel();
@@ -77,8 +77,9 @@ public class FormPaciente extends javax.swing.JFrame {
         jButtonAlterarPaciente = new javax.swing.JButton();
         jButtonExcluirPaciente = new javax.swing.JButton();
         jLabel13 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
         jTextFieldPesquisarPaciente = new javax.swing.JTextField();
+        jDateChooserDataNascimentoPac = new com.toedter.calendar.JDateChooser();
+        jButtonBuscarPaciente = new javax.swing.JButton();
         jLabelTituloPaciente = new javax.swing.JLabel();
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
@@ -107,13 +108,20 @@ public class FormPaciente extends javax.swing.JFrame {
 
         jLabel4.setText("RG");
 
+        jTextFieldNomePaciente.setEnabled(false);
         jTextFieldNomePaciente.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextFieldNomePacienteActionPerformed(evt);
             }
         });
 
+        jFormattedTextFieldRgPaciente.setEnabled(false);
+
+        jFormattedTextFieldEmailPaciente.setEnabled(false);
+
         jLabel5.setText("Telefone");
+
+        jTextFieldTelePaciente.setEnabled(false);
 
         jPanel2.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
@@ -129,7 +137,18 @@ public class FormPaciente extends javax.swing.JFrame {
 
         jLabel12.setText("Estado");
 
+        jTextFieldRuaPaciente.setEnabled(false);
+
+        jTextFieldNrPaciente.setEnabled(false);
+
+        jTextFieldComplemPaciente.setEnabled(false);
+
+        jTextFieldCidadePaciente.setEnabled(false);
+
+        jTextFieldEstadoPaciente.setEnabled(false);
+
         jComboBoxBairroPaciente.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Compensa", "Vieira", "Pq10", "Centro" }));
+        jComboBoxBairroPaciente.setEnabled(false);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -200,8 +219,14 @@ public class FormPaciente extends javax.swing.JFrame {
         jScrollPane2.setViewportView(jTable2);
 
         jButtonNovoPaciente.setText("NOVO");
+        jButtonNovoPaciente.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonNovoPacienteActionPerformed(evt);
+            }
+        });
 
         jButtonSalvarPaciente.setText("SALVAR");
+        jButtonSalvarPaciente.setEnabled(false);
         jButtonSalvarPaciente.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonSalvarPacienteActionPerformed(evt);
@@ -209,14 +234,39 @@ public class FormPaciente extends javax.swing.JFrame {
         });
 
         jButtonCancelarPaciente.setText("CANCELAR");
+        jButtonCancelarPaciente.setEnabled(false);
+        jButtonCancelarPaciente.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonCancelarPacienteActionPerformed(evt);
+            }
+        });
 
         jButtonAlterarPaciente.setText("ALTERAR");
+        jButtonAlterarPaciente.setEnabled(false);
+        jButtonAlterarPaciente.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonAlterarPacienteActionPerformed(evt);
+            }
+        });
 
         jButtonExcluirPaciente.setText("EXCLUIR");
+        jButtonExcluirPaciente.setEnabled(false);
+        jButtonExcluirPaciente.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonExcluirPacienteActionPerformed(evt);
+            }
+        });
 
         jLabel13.setText("Endereço");
 
-        jLabel6.setText("Buscar");
+        jDateChooserDataNascimentoPac.setEnabled(false);
+
+        jButtonBuscarPaciente.setText("Buscar");
+        jButtonBuscarPaciente.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonBuscarPacienteActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -245,8 +295,8 @@ public class FormPaciente extends javax.swing.JFrame {
                                 .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING))
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(jFormattedTextFieldNascimentoPaciente, javax.swing.GroupLayout.DEFAULT_SIZE, 179, Short.MAX_VALUE)
-                                .addComponent(jTextFieldTelePaciente)))
+                                .addComponent(jTextFieldTelePaciente, javax.swing.GroupLayout.DEFAULT_SIZE, 179, Short.MAX_VALUE)
+                                .addComponent(jDateChooserDataNascimentoPac, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                         .addGroup(jPanel1Layout.createSequentialGroup()
                             .addGap(21, 21, 21)
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -255,33 +305,32 @@ public class FormPaciente extends javax.swing.JFrame {
                                 .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 863, Short.MAX_VALUE))))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(169, 169, 169)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jButtonNovoPaciente, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jButtonSalvarPaciente, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButtonCancelarPaciente, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButtonAlterarPaciente, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButtonExcluirPaciente, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(48, 48, 48)
-                                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jTextFieldPesquisarPaciente, javax.swing.GroupLayout.PREFERRED_SIZE, 391, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                        .addComponent(jButtonNovoPaciente, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jButtonSalvarPaciente, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButtonCancelarPaciente, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButtonAlterarPaciente, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButtonExcluirPaciente, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(190, 190, 190)
+                        .addComponent(jTextFieldPesquisarPaciente, javax.swing.GroupLayout.PREFERRED_SIZE, 391, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jButtonBuscarPaciente)))
                 .addContainerGap(35, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(20, 20, 20)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(jLabel2)
-                    .addComponent(jTextFieldNomePaciente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jFormattedTextFieldNascimentoPaciente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel1)
+                        .addComponent(jLabel2)
+                        .addComponent(jTextFieldNomePaciente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jDateChooserDataNascimentoPac, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(20, 20, 20)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
@@ -294,11 +343,11 @@ public class FormPaciente extends javax.swing.JFrame {
                 .addComponent(jLabel13)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(13, 13, 13)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel6)
-                    .addComponent(jTextFieldPesquisarPaciente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(10, 10, 10)
+                    .addComponent(jTextFieldPesquisarPaciente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButtonBuscarPaciente))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 15, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -356,6 +405,11 @@ public class FormPaciente extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextFieldNomePacienteActionPerformed
 
     private void jButtonSalvarPacienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSalvarPacienteActionPerformed
+     
+
+
+      
+        
         try {
             conecta.conect();
         } catch (ClassNotFoundException ex) {
@@ -366,7 +420,9 @@ public class FormPaciente extends javax.swing.JFrame {
            
         
         usu.setPac_nome(jTextFieldNomePaciente.getText());
-        usu.setPac_nascimento(String.valueOf(jFormattedTextFieldNascimentoPaciente.getText()));
+        SimpleDateFormat formatador = new SimpleDateFormat("yyyy-MM-dd");
+      
+        usu.setPac_nascimento(formatador.format(jDateChooserDataNascimentoPac.getDate()));
         usu.setPac_rg(String.valueOf(jFormattedTextFieldRgPaciente.getText()));
         usu.setPac_email(String.valueOf(jFormattedTextFieldEmailPaciente.getText()));
         usu.setPac_telefone(jTextFieldTelePaciente.getText());
@@ -377,9 +433,52 @@ public class FormPaciente extends javax.swing.JFrame {
         usu.setPac_cidade(jTextFieldCidadePaciente.getText());
         usu.setPac_estado(jTextFieldEstadoPaciente.getText());
         
+        
+        
+        
         try {
             mod.salvar(usu);
             JOptionPane.showMessageDialog(null, "Paciente inserido com sucesso");
+           
+            jTextFieldNomePaciente.setEnabled(false);
+            jTextFieldTelePaciente.setEnabled(false);
+            jTextFieldRuaPaciente.setEnabled(false);
+            jTextFieldNrPaciente.setEnabled(false);
+            jTextFieldComplemPaciente.setEnabled(false);
+            jTextFieldCidadePaciente.setEnabled(false);
+            jTextFieldEstadoPaciente.setEnabled(false);
+            jTextFieldPesquisarPaciente.setEnabled(true);
+            
+            jTextFieldNomePaciente.setText("");
+            jTextFieldTelePaciente.setText("");
+            jTextFieldRuaPaciente.setText("");
+            jTextFieldNrPaciente.setText("");
+            jTextFieldComplemPaciente.setText("");
+            jTextFieldCidadePaciente.setText("");
+            jTextFieldEstadoPaciente.setText("");
+            
+            jDateChooserDataNascimentoPac.setDate(null);            
+            jFormattedTextFieldRgPaciente.setText("");
+            jFormattedTextFieldEmailPaciente.setText("");
+            jComboBoxBairroPaciente.setSelectedIndex(0);
+             jFormattedTextFieldRgPaciente.setEnabled(false);
+            jFormattedTextFieldEmailPaciente.setEnabled(false);           
+            jDateChooserDataNascimentoPac.setEnabled(false);
+            jComboBoxBairroPaciente.setEnabled(false);
+            
+            jButtonAlterarPaciente.setEnabled(false);
+            jButtonCancelarPaciente.setEnabled(false);
+            jButtonExcluirPaciente.setEnabled(false);
+            jButtonNovoPaciente.setEnabled(true);
+            jButtonSalvarPaciente.setEnabled(false);
+            jButtonBuscarPaciente.setEnabled(true);
+            
+
+            
+
+            
+   
+            
         } catch (ClassNotFoundException ex) {
         JOptionPane.showMessageDialog(null, "Erro ao inserir paciente\n"+ex.getMessage());
         } catch (SQLException ex) {
@@ -397,6 +496,174 @@ public class FormPaciente extends javax.swing.JFrame {
             Logger.getLogger(FormPaciente.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_jButtonSalvarPacienteActionPerformed
+
+    private void jButtonNovoPacienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonNovoPacienteActionPerformed
+            jTextFieldNomePaciente.setEnabled(true);
+            jTextFieldTelePaciente.setEnabled(true);
+            jTextFieldRuaPaciente.setEnabled(true);
+            jTextFieldNrPaciente.setEnabled(true);
+            jTextFieldComplemPaciente.setEnabled(true);
+            jTextFieldCidadePaciente.setEnabled(true);
+            jTextFieldEstadoPaciente.setEnabled(true);
+            jTextFieldPesquisarPaciente.setEnabled(false);
+            
+         
+            jFormattedTextFieldRgPaciente.setEnabled(true);
+            jFormattedTextFieldEmailPaciente.setEnabled(true);
+            
+            jComboBoxBairroPaciente.setSelectedIndex(0);
+            jComboBoxBairroPaciente.setEnabled(true);
+            
+            jButtonAlterarPaciente.setEnabled(false);
+            jButtonCancelarPaciente.setEnabled(true);
+            jButtonExcluirPaciente.setEnabled(false);
+            jButtonNovoPaciente.setEnabled(false);
+            jButtonSalvarPaciente.setEnabled(true);
+            jButtonBuscarPaciente.setEnabled(false);
+            jDateChooserDataNascimentoPac.setEnabled(true);
+
+    }//GEN-LAST:event_jButtonNovoPacienteActionPerformed
+
+    private void jButtonCancelarPacienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCancelarPacienteActionPerformed
+           jTextFieldNomePaciente.setEnabled(false);
+            jTextFieldTelePaciente.setEnabled(false);
+            jTextFieldRuaPaciente.setEnabled(false);
+            jTextFieldNrPaciente.setEnabled(false);
+            jTextFieldComplemPaciente.setEnabled(false);
+            jTextFieldCidadePaciente.setEnabled(false);
+            jTextFieldEstadoPaciente.setEnabled(false);
+            jTextFieldPesquisarPaciente.setEnabled(true);
+            
+            jTextFieldNomePaciente.setText("");
+            jTextFieldTelePaciente.setText("");
+            jTextFieldRuaPaciente.setText("");
+            jTextFieldNrPaciente.setText("");
+            jTextFieldComplemPaciente.setText("");
+            jTextFieldCidadePaciente.setText("");
+            jTextFieldEstadoPaciente.setText("");
+            
+            jDateChooserDataNascimentoPac.setDate(null);            
+            jFormattedTextFieldRgPaciente.setText("");
+            jFormattedTextFieldEmailPaciente.setText("");
+            jComboBoxBairroPaciente.setSelectedIndex(0);
+            jFormattedTextFieldRgPaciente.setEnabled(false);
+            jFormattedTextFieldEmailPaciente.setEnabled(false);           
+            jDateChooserDataNascimentoPac.setEnabled(false);
+            jComboBoxBairroPaciente.setEnabled(false);
+            
+            jButtonAlterarPaciente.setEnabled(false);
+            jButtonCancelarPaciente.setEnabled(false);
+            jButtonExcluirPaciente.setEnabled(false);
+            jButtonNovoPaciente.setEnabled(true);
+            jButtonSalvarPaciente.setEnabled(false);
+            jButtonBuscarPaciente.setEnabled(true);
+    }//GEN-LAST:event_jButtonCancelarPacienteActionPerformed
+
+    private void jButtonAlterarPacienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAlterarPacienteActionPerformed
+       jTextFieldNomePaciente.setEnabled(false);
+            jTextFieldTelePaciente.setEnabled(false);
+            jTextFieldRuaPaciente.setEnabled(false);
+            jTextFieldNrPaciente.setEnabled(false);
+            jTextFieldComplemPaciente.setEnabled(false);
+            jTextFieldCidadePaciente.setEnabled(false);
+            jTextFieldEstadoPaciente.setEnabled(false);
+            jTextFieldPesquisarPaciente.setEnabled(true);
+            
+            jTextFieldNomePaciente.setText("");
+            jTextFieldTelePaciente.setText("");
+            jTextFieldRuaPaciente.setText("");
+            jTextFieldNrPaciente.setText("");
+            jTextFieldComplemPaciente.setText("");
+            jTextFieldCidadePaciente.setText("");
+            jTextFieldEstadoPaciente.setText("");
+            
+            jDateChooserDataNascimentoPac.setDate(null);            
+            jFormattedTextFieldRgPaciente.setText("");
+            jFormattedTextFieldEmailPaciente.setText("");
+            jComboBoxBairroPaciente.setSelectedIndex(0);
+             jFormattedTextFieldRgPaciente.setEnabled(false);
+            jFormattedTextFieldEmailPaciente.setEnabled(false);           
+            jDateChooserDataNascimentoPac.setEnabled(false);
+            jComboBoxBairroPaciente.setEnabled(false);
+            
+            jButtonAlterarPaciente.setEnabled(false);
+            jButtonCancelarPaciente.setEnabled(false);
+            jButtonExcluirPaciente.setEnabled(false);
+            jButtonNovoPaciente.setEnabled(true);
+            jButtonSalvarPaciente.setEnabled(false);
+            jButtonBuscarPaciente.setEnabled(true);
+    }//GEN-LAST:event_jButtonAlterarPacienteActionPerformed
+
+    private void jButtonExcluirPacienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonExcluirPacienteActionPerformed
+        jTextFieldNomePaciente.setEnabled(false);
+            jTextFieldTelePaciente.setEnabled(false);
+            jTextFieldRuaPaciente.setEnabled(false);
+            jTextFieldNrPaciente.setEnabled(false);
+            jTextFieldComplemPaciente.setEnabled(false);
+            jTextFieldCidadePaciente.setEnabled(false);
+            jTextFieldEstadoPaciente.setEnabled(false);
+            jTextFieldPesquisarPaciente.setEnabled(true);
+            
+            jTextFieldNomePaciente.setText("");
+            jTextFieldTelePaciente.setText("");
+            jTextFieldRuaPaciente.setText("");
+            jTextFieldNrPaciente.setText("");
+            jTextFieldComplemPaciente.setText("");
+            jTextFieldCidadePaciente.setText("");
+            jTextFieldEstadoPaciente.setText("");
+            
+            jDateChooserDataNascimentoPac.setDate(null);            
+            jFormattedTextFieldRgPaciente.setText("");
+            jFormattedTextFieldEmailPaciente.setText("");
+            jComboBoxBairroPaciente.setSelectedIndex(0);
+             jFormattedTextFieldRgPaciente.setEnabled(false);
+            jFormattedTextFieldEmailPaciente.setEnabled(false);           
+            jDateChooserDataNascimentoPac.setEnabled(false);
+            jComboBoxBairroPaciente.setEnabled(false);
+            
+            jButtonAlterarPaciente.setEnabled(false);
+            jButtonCancelarPaciente.setEnabled(false);
+            jButtonExcluirPaciente.setEnabled(false);
+            jButtonNovoPaciente.setEnabled(true);
+            jButtonSalvarPaciente.setEnabled(false);
+            jButtonBuscarPaciente.setEnabled(true);
+    }//GEN-LAST:event_jButtonExcluirPacienteActionPerformed
+
+    private void jButtonBuscarPacienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBuscarPacienteActionPerformed
+          usu.setPac_nome(jTextFieldPesquisarPaciente.getText());
+         try {
+             mod.buscaPac(usu);
+             jTextFieldNomePaciente.setText(usu.getPac_nome());
+                     } catch (ClassNotFoundException ex) {
+             Logger.getLogger(FormPaciente.class.getName()).log(Level.SEVERE, null, ex);
+         } catch (SQLException ex) {
+             Logger.getLogger(FormPaciente.class.getName()).log(Level.SEVERE, null, ex);
+         }
+        
+            jTextFieldNomePaciente.setEnabled(true);
+            jTextFieldTelePaciente.setEnabled(true);
+            jTextFieldRuaPaciente.setEnabled(true);
+            jTextFieldNrPaciente.setEnabled(true);
+            jTextFieldComplemPaciente.setEnabled(true);
+            jTextFieldCidadePaciente.setEnabled(true);
+            jTextFieldEstadoPaciente.setEnabled(true);
+            jTextFieldPesquisarPaciente.setEnabled(false);
+            
+       
+            
+         
+             jFormattedTextFieldRgPaciente.setEnabled(true);
+            jFormattedTextFieldEmailPaciente.setEnabled(true);           
+            jDateChooserDataNascimentoPac.setEnabled(true);
+            jComboBoxBairroPaciente.setEnabled(true);
+            
+            jButtonAlterarPaciente.setEnabled(true);
+            jButtonCancelarPaciente.setEnabled(true);
+            jButtonExcluirPaciente.setEnabled(true);
+            jButtonNovoPaciente.setEnabled(false);
+            jButtonSalvarPaciente.setEnabled(false);
+            jButtonBuscarPaciente.setEnabled(true);
+    }//GEN-LAST:event_jButtonBuscarPacienteActionPerformed
 
     /**
      * @param args the command line arguments
@@ -435,13 +702,14 @@ public class FormPaciente extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonAlterarPaciente;
+    private javax.swing.JButton jButtonBuscarPaciente;
     private javax.swing.JButton jButtonCancelarPaciente;
     private javax.swing.JButton jButtonExcluirPaciente;
     private javax.swing.JButton jButtonNovoPaciente;
     private javax.swing.JButton jButtonSalvarPaciente;
     private javax.swing.JComboBox jComboBoxBairroPaciente;
+    private com.toedter.calendar.JDateChooser jDateChooserDataNascimentoPac;
     private javax.swing.JFormattedTextField jFormattedTextFieldEmailPaciente;
-    private javax.swing.JFormattedTextField jFormattedTextFieldNascimentoPaciente;
     private javax.swing.JFormattedTextField jFormattedTextFieldRgPaciente;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
@@ -452,7 +720,6 @@ public class FormPaciente extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
