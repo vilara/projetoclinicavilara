@@ -3,14 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package modeloDao;
+package dao;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import javax.swing.JOptionPane;
-import modeloBeans.BeansUsuario;
-import modeloConnsection.ConexaoBD;
-import modeloBeans.BeansPaciente;
+import model.BeansUsuario;
+import util.ConexaoBD;
+import model.BeansPaciente;
 /**
  *
  * @author MarceloMartinsVilara

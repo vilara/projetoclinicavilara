@@ -376,15 +376,19 @@
             <Component class="javax.swing.JComboBox" name="jComboBoxBairroPaciente">
               <Properties>
                 <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                  <StringArray count="4">
-                    <StringItem index="0" value="Compensa"/>
-                    <StringItem index="1" value="Vieira"/>
-                    <StringItem index="2" value="Pq10"/>
-                    <StringItem index="3" value="Centro"/>
+                  <StringArray count="5">
+                    <StringItem index="0" value="Selecione o bairro"/>
+                    <StringItem index="1" value="Compensa"/>
+                    <StringItem index="2" value="Vieira"/>
+                    <StringItem index="3" value="Pq10"/>
+                    <StringItem index="4" value="Centro"/>
                   </StringArray>
                 </Property>
                 <Property name="enabled" type="boolean" value="false"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jComboBoxBairroPacienteActionPerformed"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>

@@ -3,14 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package visao;
+package core;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.ListSelectionModel;
-import modeloBeans.ModeloTabela;
-import modeloConnsection.ConexaoBD;
+import model.ModeloTabela;
+import util.ConexaoBD;
 
 /**
  *
