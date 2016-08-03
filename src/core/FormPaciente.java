@@ -137,9 +137,9 @@ public class FormPaciente extends javax.swing.JFrame {
 
         jLabel10.setText("Bairro");
 
-        jLabel11.setText("Cidade");
+        jLabel11.setText("Estado");
 
-        jLabel12.setText("Estado");
+        jLabel12.setText("Cidade");
 
         jTextFieldRuaPaciente.setEnabled(false);
 
@@ -156,6 +156,7 @@ public class FormPaciente extends javax.swing.JFrame {
         });
 
         jComboBoxEstado.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jComboBoxEstado.setEnabled(false);
         jComboBoxEstado.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jComboBoxEstadoActionPerformed(evt);
@@ -163,6 +164,7 @@ public class FormPaciente extends javax.swing.JFrame {
         });
 
         jComboBoxCidade.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jComboBoxCidade.setEnabled(false);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -172,34 +174,30 @@ public class FormPaciente extends javax.swing.JFrame {
                 .addGap(27, 27, 27)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jLabel10)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jComboBoxBairroPaciente, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel11)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jComboBoxCidade, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(jLabel7)
                         .addGap(18, 18, 18)
                         .addComponent(jTextFieldRuaPaciente)
                         .addGap(18, 18, 18)
                         .addComponent(jLabel8)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextFieldNrPaciente, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel9)
-                    .addComponent(jLabel12))
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jTextFieldNrPaciente, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jLabel9)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextFieldComplemPaciente, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jTextFieldComplemPaciente, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(13, 13, 13)
-                        .addComponent(jComboBoxEstado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(23, 23, 23))
+                        .addComponent(jLabel10)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jComboBoxBairroPaciente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel11)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jComboBoxEstado, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel12)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jComboBoxCidade, javax.swing.GroupLayout.PREFERRED_SIZE, 381, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -428,11 +426,12 @@ public class FormPaciente extends javax.swing.JFrame {
         jComboBoxEstado.removeAllItems();
         jComboBoxEstado.addItem("Selecione...");
        while (conecta.rs.next()){
-        jComboBoxEstado.addItem(conecta.rs.getInt("cod_estados") + " - " + conecta.rs.getString("sigla") );
-        
+        jComboBoxEstado.addItem(conecta.rs.getString("sigla"));
+        lista.add(conecta.rs.getInt("cod_estados"));
     }
         
         conecta.conect();
+        System.out.println(lista);
     }
     
        public void preencheCidades(String cod) throws ClassNotFoundException, SQLException{
@@ -569,8 +568,8 @@ public class FormPaciente extends javax.swing.JFrame {
         jTextFieldRuaPaciente.setEnabled(true);
         jTextFieldNrPaciente.setEnabled(true);
         jTextFieldComplemPaciente.setEnabled(true);
-      //  jTextFieldCidadePaciente.setEnabled(true);
-       // jTextFieldEstadoPaciente.setEnabled(true);
+      jComboBoxEstado.setEnabled(true);
+       jComboBoxCidade.setEnabled(true);
         jTextFieldPesquisarPaciente.setEnabled(false);
 
         jFormattedTextFieldRgPaciente.setEnabled(true);
@@ -732,25 +731,27 @@ public class FormPaciente extends javax.swing.JFrame {
     }//GEN-LAST:event_jComboBoxBairroPacienteActionPerformed
 
     private void jComboBoxEstadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxEstadoActionPerformed
-        String dad[] = String.valueOf(jComboBoxEstado.getSelectedItem()).split(" - ");
-        if(!dad[0].equalsIgnoreCase("Selecione...") && !dad[0].equals("null")){
-            jComboBoxCidade.removeAll();
+        String dad = String.valueOf(jComboBoxEstado.getSelectedItem());
+        if(!dad.equalsIgnoreCase("Selecione...") && !dad.equalsIgnoreCase("null")){
+            
+            int pos = (int) lista.get(jComboBoxEstado.getSelectedIndex() - 1); // pega o índice da lista baseado no index do combobox menos 1
+           
+                   
+            jComboBoxCidade.removeAllItems();
             jComboBoxCidade.addItem("Selecione...");
             try {
-                preencheCidades(dad[0]);
+                preencheCidades(String.valueOf(pos));
             } catch (ClassNotFoundException ex) {
                 Logger.getLogger(FormPaciente.class.getName()).log(Level.SEVERE, null, ex);
             } catch (SQLException ex) {
                 Logger.getLogger(FormPaciente.class.getName()).log(Level.SEVERE, null, ex);
             }
+        }else{
+            jComboBoxCidade.removeAllItems();
+            jComboBoxCidade.addItem("Selecione o estado antes...");
         }
-      /*  try {
-            preencheCidades(dad[0]);
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(FormPaciente.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SQLException ex) {
-            Logger.getLogger(FormPaciente.class.getName()).log(Level.SEVERE, null, ex);
-        }*/
+         
+     
     }//GEN-LAST:event_jComboBoxEstadoActionPerformed
 
     /**
