@@ -13,19 +13,20 @@ import javax.swing.JOptionPane;
 import model.BeansPaciente;
 import util.ConexaoBD;
 import dao.DaoPaciente;
+import java.util.ArrayList;
 
 /**
  *
  * @author MarceloMartinsVilara
  */
 public class FormPaciente extends javax.swing.JFrame {
-
+    static ArrayList lista = new ArrayList();
     ConexaoBD conecta = new ConexaoBD();
     BeansPaciente usu = new BeansPaciente();
     DaoPaciente mod = new DaoPaciente();
     static int flag = 0;
 
-    public FormPaciente() {
+    public FormPaciente() throws ClassNotFoundException, SQLException {
         initComponents();
         try {
             preencherbairros();
@@ -34,6 +35,8 @@ public class FormPaciente extends javax.swing.JFrame {
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "Erro ao preencher os nomes dos bairros");
         }
+        
+        preencheEstados();
     }
 
     /**
@@ -67,9 +70,9 @@ public class FormPaciente extends javax.swing.JFrame {
         jTextFieldRuaPaciente = new javax.swing.JTextField();
         jTextFieldNrPaciente = new javax.swing.JTextField();
         jTextFieldComplemPaciente = new javax.swing.JTextField();
-        jTextFieldCidadePaciente = new javax.swing.JTextField();
-        jTextFieldEstadoPaciente = new javax.swing.JTextField();
         jComboBoxBairroPaciente = new javax.swing.JComboBox();
+        jComboBoxEstado = new javax.swing.JComboBox();
+        jComboBoxCidade = new javax.swing.JComboBox();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTable2 = new javax.swing.JTable();
         jButtonNovoPaciente = new javax.swing.JButton();
@@ -144,10 +147,6 @@ public class FormPaciente extends javax.swing.JFrame {
 
         jTextFieldComplemPaciente.setEnabled(false);
 
-        jTextFieldCidadePaciente.setEnabled(false);
-
-        jTextFieldEstadoPaciente.setEnabled(false);
-
         jComboBoxBairroPaciente.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Selecione o bairro", "Compensa", "Vieira", "Pq10", "Centro" }));
         jComboBoxBairroPaciente.setEnabled(false);
         jComboBoxBairroPaciente.addActionListener(new java.awt.event.ActionListener() {
@@ -155,6 +154,15 @@ public class FormPaciente extends javax.swing.JFrame {
                 jComboBoxBairroPacienteActionPerformed(evt);
             }
         });
+
+        jComboBoxEstado.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jComboBoxEstado.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBoxEstadoActionPerformed(evt);
+            }
+        });
+
+        jComboBoxCidade.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -170,7 +178,8 @@ public class FormPaciente extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addComponent(jLabel11)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextFieldCidadePaciente))
+                        .addComponent(jComboBoxCidade, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(jLabel7)
                         .addGap(18, 18, 18)
@@ -183,10 +192,13 @@ public class FormPaciente extends javax.swing.JFrame {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel9)
                     .addComponent(jLabel12))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jTextFieldEstadoPaciente, javax.swing.GroupLayout.DEFAULT_SIZE, 179, Short.MAX_VALUE)
-                    .addComponent(jTextFieldComplemPaciente))
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jTextFieldComplemPaciente, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(13, 13, 13)
+                        .addComponent(jComboBoxEstado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(23, 23, 23))
         );
         jPanel2Layout.setVerticalGroup(
@@ -205,9 +217,9 @@ public class FormPaciente extends javax.swing.JFrame {
                     .addComponent(jLabel10)
                     .addComponent(jLabel11)
                     .addComponent(jLabel12)
-                    .addComponent(jTextFieldCidadePaciente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextFieldEstadoPaciente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jComboBoxBairroPaciente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jComboBoxBairroPaciente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jComboBoxEstado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jComboBoxCidade, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(26, Short.MAX_VALUE))
         );
 
@@ -396,16 +408,48 @@ public class FormPaciente extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
     public void preencherbairros() throws ClassNotFoundException, SQLException {
         conecta.conect();
-
+       
         conecta.executaSql("SELECT * FROM bairro ORDER BY bairro_nome");
         conecta.rs.first();
         jComboBoxBairroPaciente.removeAllItems();
+        jComboBoxBairroPaciente.addItem("Selecione...");
         do {
             jComboBoxBairroPaciente.addItem(conecta.rs.getString("bairro_nome")); // preenchimento automático do combobox de bairros buscando do banco de dados
         } while (conecta.rs.next());
 
         conecta.desconecta();
     }
+    
+    public void preencheEstados() throws ClassNotFoundException, SQLException{
+        conecta.conect();
+        String sql = "SELECT * FROM estados";       
+        conecta.stm = conecta.coc.prepareStatement(sql);
+        conecta.rs = conecta.stm.executeQuery(sql);
+        jComboBoxEstado.removeAllItems();
+        jComboBoxEstado.addItem("Selecione...");
+       while (conecta.rs.next()){
+        jComboBoxEstado.addItem(conecta.rs.getInt("cod_estados") + " - " + conecta.rs.getString("sigla") );
+        
+    }
+        
+        conecta.conect();
+    }
+    
+       public void preencheCidades(String cod) throws ClassNotFoundException, SQLException{
+        conecta.conect();
+        String sql = "SELECT * FROM cidades WHERE estados_cod_estados="+cod;       
+        conecta.stm = conecta.coc.prepareStatement(sql);
+        conecta.rs = conecta.stm.executeQuery(sql);
+        jComboBoxCidade.removeAllItems();
+        jComboBoxCidade.addItem("Selecione...");
+       while (conecta.rs.next()){
+        jComboBoxCidade.addItem(conecta.rs.getString("nome") );
+    }
+        
+        conecta.conect();
+    }
+    
+    
     private void jTextFieldNomePacienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldNomePacienteActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextFieldNomePacienteActionPerformed
@@ -447,12 +491,6 @@ public class FormPaciente extends javax.swing.JFrame {
         }else if (jComboBoxBairroPaciente.getSelectedIndex()==1) {
             JOptionPane.showMessageDialog(null, "Favor escolher um bairro!");
            jComboBoxBairroPaciente.requestFocus();
-        }else if (jTextFieldCidadePaciente.getText().isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Favor preencher o campo Cidade!");
-            jTextFieldCidadePaciente.requestFocus();
-        }else if (jTextFieldEstadoPaciente.getText().isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Favor preencher o campo Estado!");
-            jTextFieldEstadoPaciente.requestFocus();
         }        
         else{check = "ok";}
         System.out.println("teste"+check);
@@ -469,8 +507,8 @@ public class FormPaciente extends javax.swing.JFrame {
             usu.setPac_nr(Integer.valueOf(jTextFieldNrPaciente.getText()));
             usu.setPac_complemento(jTextFieldComplemPaciente.getText());
             usu.setPac_bairro(String.valueOf(jComboBoxBairroPaciente.getSelectedItem()));
-            usu.setPac_cidade(jTextFieldCidadePaciente.getText());
-            usu.setPac_estado(jTextFieldEstadoPaciente.getText());
+      //     usu.setPac_cidade(jTextFieldCidadePaciente.getText());
+       //     usu.setPac_estado(jTextFieldEstadoPaciente.getText());
 
             try {
 
@@ -482,8 +520,8 @@ public class FormPaciente extends javax.swing.JFrame {
                 jTextFieldRuaPaciente.setEnabled(false);
                 jTextFieldNrPaciente.setEnabled(false);
                 jTextFieldComplemPaciente.setEnabled(false);
-                jTextFieldCidadePaciente.setEnabled(false);
-                jTextFieldEstadoPaciente.setEnabled(false);
+           //     jTextFieldCidadePaciente.setEnabled(false);
+           //     jTextFieldEstadoPaciente.setEnabled(false);
                 jTextFieldPesquisarPaciente.setEnabled(true);
 
                 jTextFieldNomePaciente.setText("");
@@ -491,8 +529,8 @@ public class FormPaciente extends javax.swing.JFrame {
                 jTextFieldRuaPaciente.setText("");
                 jTextFieldNrPaciente.setText("");
                 jTextFieldComplemPaciente.setText("");
-                jTextFieldCidadePaciente.setText("");
-                jTextFieldEstadoPaciente.setText("");
+          //      jTextFieldCidadePaciente.setText("");
+          //      jTextFieldEstadoPaciente.setText("");
 
                 jDateChooserDataNascimentoPac.setDate(null);
                 jFormattedTextFieldRgPaciente.setText("");
@@ -531,8 +569,8 @@ public class FormPaciente extends javax.swing.JFrame {
         jTextFieldRuaPaciente.setEnabled(true);
         jTextFieldNrPaciente.setEnabled(true);
         jTextFieldComplemPaciente.setEnabled(true);
-        jTextFieldCidadePaciente.setEnabled(true);
-        jTextFieldEstadoPaciente.setEnabled(true);
+      //  jTextFieldCidadePaciente.setEnabled(true);
+       // jTextFieldEstadoPaciente.setEnabled(true);
         jTextFieldPesquisarPaciente.setEnabled(false);
 
         jFormattedTextFieldRgPaciente.setEnabled(true);
@@ -557,8 +595,8 @@ public class FormPaciente extends javax.swing.JFrame {
         jTextFieldRuaPaciente.setEnabled(false);
         jTextFieldNrPaciente.setEnabled(false);
         jTextFieldComplemPaciente.setEnabled(false);
-        jTextFieldCidadePaciente.setEnabled(false);
-        jTextFieldEstadoPaciente.setEnabled(false);
+      //  jTextFieldCidadePaciente.setEnabled(false);
+      //  jTextFieldEstadoPaciente.setEnabled(false);
         jTextFieldPesquisarPaciente.setEnabled(true);
 
         jTextFieldNomePaciente.setText("");
@@ -566,8 +604,8 @@ public class FormPaciente extends javax.swing.JFrame {
         jTextFieldRuaPaciente.setText("");
         jTextFieldNrPaciente.setText("");
         jTextFieldComplemPaciente.setText("");
-        jTextFieldCidadePaciente.setText("");
-        jTextFieldEstadoPaciente.setText("");
+      //  jTextFieldCidadePaciente.setText("");
+      //  jTextFieldEstadoPaciente.setText("");
 
         jDateChooserDataNascimentoPac.setDate(null);
         jFormattedTextFieldRgPaciente.setText("");
@@ -592,8 +630,8 @@ public class FormPaciente extends javax.swing.JFrame {
         jTextFieldRuaPaciente.setEnabled(false);
         jTextFieldNrPaciente.setEnabled(false);
         jTextFieldComplemPaciente.setEnabled(false);
-        jTextFieldCidadePaciente.setEnabled(false);
-        jTextFieldEstadoPaciente.setEnabled(false);
+      //  jTextFieldCidadePaciente.setEnabled(false);
+      //  jTextFieldEstadoPaciente.setEnabled(false);
         jTextFieldPesquisarPaciente.setEnabled(true);
 
         jTextFieldNomePaciente.setText("");
@@ -601,8 +639,8 @@ public class FormPaciente extends javax.swing.JFrame {
         jTextFieldRuaPaciente.setText("");
         jTextFieldNrPaciente.setText("");
         jTextFieldComplemPaciente.setText("");
-        jTextFieldCidadePaciente.setText("");
-        jTextFieldEstadoPaciente.setText("");
+     //   jTextFieldCidadePaciente.setText("");
+     //   jTextFieldEstadoPaciente.setText("");
 
         jDateChooserDataNascimentoPac.setDate(null);
         jFormattedTextFieldRgPaciente.setText("");
@@ -627,8 +665,8 @@ public class FormPaciente extends javax.swing.JFrame {
         jTextFieldRuaPaciente.setEnabled(false);
         jTextFieldNrPaciente.setEnabled(false);
         jTextFieldComplemPaciente.setEnabled(false);
-        jTextFieldCidadePaciente.setEnabled(false);
-        jTextFieldEstadoPaciente.setEnabled(false);
+      //  jTextFieldCidadePaciente.setEnabled(false);
+      // jTextFieldEstadoPaciente.setEnabled(false);
         jTextFieldPesquisarPaciente.setEnabled(true);
 
         jTextFieldNomePaciente.setText("");
@@ -636,8 +674,8 @@ public class FormPaciente extends javax.swing.JFrame {
         jTextFieldRuaPaciente.setText("");
         jTextFieldNrPaciente.setText("");
         jTextFieldComplemPaciente.setText("");
-        jTextFieldCidadePaciente.setText("");
-        jTextFieldEstadoPaciente.setText("");
+      //  jTextFieldCidadePaciente.setText("");
+      //  jTextFieldEstadoPaciente.setText("");
 
         jDateChooserDataNascimentoPac.setDate(null);
         jFormattedTextFieldRgPaciente.setText("");
@@ -672,8 +710,8 @@ public class FormPaciente extends javax.swing.JFrame {
         jTextFieldRuaPaciente.setEnabled(true);
         jTextFieldNrPaciente.setEnabled(true);
         jTextFieldComplemPaciente.setEnabled(true);
-        jTextFieldCidadePaciente.setEnabled(true);
-        jTextFieldEstadoPaciente.setEnabled(true);
+      //  jTextFieldCidadePaciente.setEnabled(true);
+      //  jTextFieldEstadoPaciente.setEnabled(true);
         jTextFieldPesquisarPaciente.setEnabled(false);
 
         jFormattedTextFieldRgPaciente.setEnabled(true);
@@ -690,8 +728,30 @@ public class FormPaciente extends javax.swing.JFrame {
     }//GEN-LAST:event_jButtonBuscarPacienteActionPerformed
 
     private void jComboBoxBairroPacienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxBairroPacienteActionPerformed
-        // TODO add your handling code here:
+     
     }//GEN-LAST:event_jComboBoxBairroPacienteActionPerformed
+
+    private void jComboBoxEstadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxEstadoActionPerformed
+        String dad[] = String.valueOf(jComboBoxEstado.getSelectedItem()).split(" - ");
+        if(!dad[0].equalsIgnoreCase("Selecione...") && !dad[0].equals("null")){
+            jComboBoxCidade.removeAll();
+            jComboBoxCidade.addItem("Selecione...");
+            try {
+                preencheCidades(dad[0]);
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(FormPaciente.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (SQLException ex) {
+                Logger.getLogger(FormPaciente.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+      /*  try {
+            preencheCidades(dad[0]);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(FormPaciente.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(FormPaciente.class.getName()).log(Level.SEVERE, null, ex);
+        }*/
+    }//GEN-LAST:event_jComboBoxEstadoActionPerformed
 
     /**
      * @param args the command line arguments
@@ -723,7 +783,13 @@ public class FormPaciente extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new FormPaciente().setVisible(true);
+                try {
+                    new FormPaciente().setVisible(true);
+                } catch (ClassNotFoundException ex) {
+                    Logger.getLogger(FormPaciente.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (SQLException ex) {
+                    Logger.getLogger(FormPaciente.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
     }
@@ -736,6 +802,8 @@ public class FormPaciente extends javax.swing.JFrame {
     private javax.swing.JButton jButtonNovoPaciente;
     private javax.swing.JButton jButtonSalvarPaciente;
     private javax.swing.JComboBox jComboBoxBairroPaciente;
+    private javax.swing.JComboBox jComboBoxCidade;
+    private javax.swing.JComboBox jComboBoxEstado;
     private com.toedter.calendar.JDateChooser jDateChooserDataNascimentoPac;
     private javax.swing.JFormattedTextField jFormattedTextFieldEmailPaciente;
     private javax.swing.JFormattedTextField jFormattedTextFieldRgPaciente;
@@ -758,9 +826,7 @@ public class FormPaciente extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable jTable1;
     private javax.swing.JTable jTable2;
-    private javax.swing.JTextField jTextFieldCidadePaciente;
     private javax.swing.JTextField jTextFieldComplemPaciente;
-    private javax.swing.JTextField jTextFieldEstadoPaciente;
     private javax.swing.JTextField jTextFieldNomePaciente;
     private javax.swing.JTextField jTextFieldNrPaciente;
     private javax.swing.JTextField jTextFieldPesquisarPaciente;
