@@ -20,8 +20,8 @@ public class BeansPaciente {
     private int pac_nr;
     private String pac_complemento;
     private String pac_bairro;
-    private String pac_cidade;
-    private String pac_estado;
+    private int pac_cidade;
+    private int pac_estado;
     private String pac_pesquisa;
 
     /**
@@ -167,28 +167,28 @@ public class BeansPaciente {
     /**
      * @return the pac_cidade
      */
-    public String getPac_cidade() {
+    public int getPac_cidade() {
         return pac_cidade;
     }
 
     /**
      * @param pac_cidade the pac_cidade to set
      */
-    public void setPac_cidade(String pac_cidade) {
+    public void setPac_cidade(int pac_cidade) {
         this.pac_cidade = pac_cidade;
     }
 
     /**
      * @return the pac_estado
      */
-    public String getPac_estado() {
+    public int getPac_estado() {
         return pac_estado;
     }
 
     /**
      * @param pac_estado the pac_estado to set
      */
-    public void setPac_estado(String pac_estado) {
+    public void setPac_estado(int pac_estado) {
         this.pac_estado = pac_estado;
     }
 

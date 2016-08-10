@@ -13,8 +13,8 @@ import javax.swing.table.AbstractTableModel;
  * @author MarceloMartinsVilara
  */
 public class ModeloTabela extends AbstractTableModel{
-    
-    private ArrayList linhas = null;
+     
+   private ArrayList linhas = null;
     private String[] coluna = null;
     
     public ModeloTabela(ArrayList lin, String[] col){
