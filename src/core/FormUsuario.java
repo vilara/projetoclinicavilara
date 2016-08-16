@@ -36,6 +36,7 @@ public class FormUsuario extends javax.swing.JFrame {
         } catch (SQLException ex) {
             Logger.getLogger(FormUsuario.class.getName()).log(Level.SEVERE, null, ex);
         }
+        jLabelId.setVisible(false);
     }
 
     /**
@@ -64,7 +65,7 @@ public class FormUsuario extends javax.swing.JFrame {
         jComboBoxTipo = new javax.swing.JComboBox();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTableUsuarios = new javax.swing.JTable();
-        jLabel2 = new javax.swing.JLabel();
+        jLabelId = new javax.swing.JLabel();
         jLabelIdUsuario = new javax.swing.JLabel();
         jButtonExcluirUsu = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
@@ -151,7 +152,7 @@ public class FormUsuario extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(jTableUsuarios);
 
-        jLabel2.setText("ID:");
+        jLabelId.setText("ID:");
 
         jButtonExcluirUsu.setText("Excluir");
         jButtonExcluirUsu.setEnabled(false);
@@ -203,7 +204,7 @@ public class FormUsuario extends javax.swing.JFrame {
                         .addComponent(jPasswordFieldConfSenha)
                         .addComponent(jComboBoxTipo, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel2)
+                        .addComponent(jLabelId)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabelIdUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -231,7 +232,7 @@ public class FormUsuario extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jTextFieldPesqUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButtonPesqUsuario)
-                    .addComponent(jLabel2)
+                    .addComponent(jLabelId)
                     .addComponent(jLabelIdUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(19, 19, 19)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -593,11 +594,11 @@ public class FormUsuario extends javax.swing.JFrame {
     private javax.swing.JButton jButtonSalvarUsu;
     private javax.swing.JComboBox jComboBoxTipo;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabelId;
     private javax.swing.JLabel jLabelIdUsuario;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPasswordField jPasswordFieldConfSenha;

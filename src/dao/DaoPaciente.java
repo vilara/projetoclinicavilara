@@ -30,6 +30,21 @@ public class DaoPaciente {
         conex.desconecta();
         return res;
     }
+    
+    // metodo usado para buscar campos que tenham id
+    public int buscaIntpaciente(String campo, String filt, int ref) throws ClassNotFoundException, SQLException {
+        conex.conect();
+        String query = "SELECT ? FROM bairro WHERE ?=?";
+        PreparedStatement stmt = conex.coc.prepareStatement(query);
+        stmt.setString(1, campo);
+        stmt.setString(2, filt);
+        stmt.setInt(3, ref);
+        conex.rs = stmt.executeQuery();
+        conex.rs.first();
+        int res = conex.rs.getInt(0);
+        conex.desconecta();
+        return res;
+    }
 
     public void salvar(BeansPaciente usu) throws ClassNotFoundException, SQLException {
 
@@ -47,7 +62,7 @@ public class DaoPaciente {
         stmt.setString(6, usu.getPac_rua());
         stmt.setInt(7, usu.getPac_nr());
         stmt.setString(8, usu.getPac_complemento());
-        stmt.setInt(9, buscapaciente(usu.getPac_bairro()));
+        stmt.setInt(9, usu.getPac_bairro());
         stmt.setInt(10, usu.getPac_estado());
         stmt.setInt(11, usu.getPac_cidade());
         stmt.execute();    // executar a query      
@@ -68,7 +83,7 @@ public class DaoPaciente {
             stmt.setString(6, mod.getPac_rua());
             stmt.setInt(7, mod.getPac_nr());
             stmt.setString(8, mod.getPac_complemento());
-            stmt.setString(9, mod.getPac_bairro());
+            stmt.setInt(9, mod.getPac_bairro());
             stmt.setInt(10, mod.getPac_cidade());
             stmt.setInt(11, mod.getPac_estado());
             stmt.setInt(12, mod.getIdPaciente());
@@ -105,6 +120,16 @@ public class DaoPaciente {
             conex.rs.first();
             mod.setIdPaciente(conex.rs.getInt("idPaciente"));
             mod.setPac_nome(conex.rs.getString("pac_nome"));
+            mod.setPac_nascimento(conex.rs.getString("pac_nascimento"));
+            mod.setPac_rg(conex.rs.getString("pac_rg"));
+            mod.setPac_email(conex.rs.getString("pac_email"));
+            mod.setPac_telefone(conex.rs.getString("pac_telefone"));
+            mod.setPac_rua(conex.rs.getString("pac_rua"));
+            mod.setPac_nr(conex.rs.getInt("pac_nr"));
+            mod.setPac_complemento(conex.rs.getString("pac_complemento"));
+            mod.setPac_bairro(conex.rs.getInt("pac_bairro"));
+            mod.setPac_estado(conex.rs.getInt("pac_estado"));
+            mod.setPac_cidade(conex.rs.getInt("pac_cidades"));
 
         } catch (SQLException ex) {
             if (ex.getMessage().equals("Illegal operation on empty result set.")) {

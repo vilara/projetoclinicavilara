@@ -19,7 +19,7 @@ public class BeansPaciente {
     private String pac_rua;
     private int pac_nr;
     private String pac_complemento;
-    private String pac_bairro;
+    private int pac_bairro;
     private int pac_cidade;
     private int pac_estado;
     private String pac_pesquisa;
@@ -153,14 +153,14 @@ public class BeansPaciente {
     /**
      * @return the pac_bairro
      */
-    public String getPac_bairro() {
+    public int getPac_bairro() {
         return pac_bairro;
     }
 
     /**
      * @param pac_bairro the pac_bairro to set
      */
-    public void setPac_bairro(String pac_bairro) {
+    public void setPac_bairro(int pac_bairro) {
         this.pac_bairro = pac_bairro;
     }
 
