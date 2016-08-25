@@ -37,7 +37,7 @@ public class FormPaciente extends javax.swing.JFrame {
     static ArrayList listaBairro = new ArrayList();
 
     ConexaoBD conecta = new ConexaoBD();
-    BeansPaciente usu = new BeansPaciente();
+   static BeansPaciente usu = new BeansPaciente();
     DaoPaciente mod = new DaoPaciente();
     BeansBairro bb = new BeansBairro();
     DaoBairro bairro = new DaoBairro();
@@ -48,7 +48,7 @@ public class FormPaciente extends javax.swing.JFrame {
 
     // esta flag será utilizada para o botão salvar diferenciar ações
     static int flag = 0;
-
+    static int flag1 = 0; // está sendo usado para verificar se houve retorno da busca pela consulta no Banco de Dados
     public FormPaciente() throws ClassNotFoundException, SQLException {
         initComponents();
         try {
@@ -107,6 +107,7 @@ public class FormPaciente extends javax.swing.JFrame {
         jTextFieldPesquisarPaciente = new javax.swing.JTextField();
         jDateChooserDataNascimentoPac = new com.toedter.calendar.JDateChooser();
         jButtonBuscarPaciente = new javax.swing.JButton();
+        jLabelID = new javax.swing.JLabel();
         jLabelTituloPaciente = new javax.swing.JLabel();
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
@@ -307,6 +308,8 @@ public class FormPaciente extends javax.swing.JFrame {
             }
         });
 
+        jLabelID.setText("id");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -357,7 +360,9 @@ public class FormPaciente extends javax.swing.JFrame {
                         .addGap(190, 190, 190)
                         .addComponent(jTextFieldPesquisarPaciente, javax.swing.GroupLayout.PREFERRED_SIZE, 391, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButtonBuscarPaciente)))
+                        .addComponent(jButtonBuscarPaciente)
+                        .addGap(55, 55, 55)
+                        .addComponent(jLabelID)))
                 .addContainerGap(35, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -385,7 +390,8 @@ public class FormPaciente extends javax.swing.JFrame {
                 .addGap(13, 13, 13)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jTextFieldPesquisarPaciente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButtonBuscarPaciente))
+                    .addComponent(jButtonBuscarPaciente)
+                    .addComponent(jLabelID))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 15, Short.MAX_VALUE)
@@ -493,15 +499,7 @@ public class FormPaciente extends javax.swing.JFrame {
 
     private void jButtonSalvarPacienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSalvarPacienteActionPerformed
 
-        try {
-            conecta.conect();
-
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(FormPaciente.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SQLException ex) {
-            Logger.getLogger(FormPaciente.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
+      
         //   System.out.println(jComboBoxCidade.getSelectedIndex()-1);
         if (jTextFieldNomePaciente.getText().isEmpty()) {
             JOptionPane.showMessageDialog(null, "Favor preencher o campo nome do paciente!");
@@ -555,9 +553,19 @@ public class FormPaciente extends javax.swing.JFrame {
             jComboBoxBairroPaciente.requestFocus();
             return;
         }
-
-        if (flag == 1) {
-
+        
+         if (Integer.valueOf(jComboBoxEstado.getSelectedIndex()) == 0) {
+            JOptionPane.showMessageDialog(null, "Favor escolher um estado!");
+            jComboBoxEstado.requestFocus();
+            return;
+        }
+          if (Integer.valueOf(jComboBoxCidade.getSelectedIndex()) == 0) {
+            JOptionPane.showMessageDialog(null, "Favor escolher uma cidade!");
+            jComboBoxCidade.requestFocus();
+            return;
+        }
+               
+      
             usu.setPac_nome(jTextFieldNomePaciente.getText());
             SimpleDateFormat formatador = new SimpleDateFormat("yyyy-MM-dd");// transforma a data para o formato do banco de dados
 
@@ -568,67 +576,80 @@ public class FormPaciente extends javax.swing.JFrame {
             usu.setPac_rua(jTextFieldRuaPaciente.getText());
             usu.setPac_nr(Integer.valueOf(jTextFieldNrPaciente.getText()));
             usu.setPac_complemento(jTextFieldComplemPaciente.getText());
+            
+             // pega o índice da lista baseado no index do combobox menos 1 e insere na lista que armazena os id dos bairros
             int idBairro = (int) listaBairro.get(jComboBoxBairroPaciente.getSelectedIndex() - 1);
             usu.setPac_bairro(idBairro);
+            
             // pega o índice da lista baseado no index do combobox menos 1 e insere na lista que armazena os id das cidades
             int idCidade = (int) listaCidade.get(jComboBoxCidade.getSelectedIndex() - 1);
             usu.setPac_cidade(idCidade);
+            
             // pega o índice da lista baseado no index do combobox menos 1 e insere na lista que armazena os id dos estados
             int idEstado = (int) listaEstado.get(jComboBoxEstado.getSelectedIndex() - 1);
             usu.setPac_estado(idEstado);
-
-            try {
-                mod.salvar(usu);
-                JOptionPane.showMessageDialog(null, "Paciente inserido com sucesso");
-                jTextFieldNomePaciente.setEnabled(false);
-                jTextFieldTelePaciente.setEnabled(false);
-                jTextFieldRuaPaciente.setEnabled(false);
-                jTextFieldNrPaciente.setEnabled(false);
-                jTextFieldComplemPaciente.setEnabled(false);
-                jTextFieldPesquisarPaciente.setEnabled(true);
-
-                jTextFieldNomePaciente.setText("");
-                jTextFieldTelePaciente.setText("");
-                jTextFieldRuaPaciente.setText("");
-                jTextFieldNrPaciente.setText("");
-                jTextFieldComplemPaciente.setText("");
-
-                jFormattedTextFieldRgPaciente.setText("");
-                jFormattedTextFieldRgPaciente.setEnabled(false);
-                jFormattedTextFieldEmailPaciente.setText("");
-                jFormattedTextFieldEmailPaciente.setEnabled(false);
-                jDateChooserDataNascimentoPac.setDate(null);
-                jDateChooserDataNascimentoPac.setEnabled(false);
-                jComboBoxBairroPaciente.setSelectedIndex(0);
-                jComboBoxBairroPaciente.setEnabled(false);
-                jComboBoxCidade.setSelectedIndex(0);
-                jComboBoxCidade.setEnabled(false);
-                jComboBoxEstado.setSelectedIndex(0);
-                jComboBoxEstado.setEnabled(false);
-
-                jButtonAlterarPaciente.setEnabled(false);
-                jButtonCancelarPaciente.setEnabled(false);
-                jButtonExcluirPaciente.setEnabled(false);
-                jButtonNovoPaciente.setEnabled(true);
-                jButtonSalvarPaciente.setEnabled(false);
-                jButtonBuscarPaciente.setEnabled(true);
-
-            } catch (ClassNotFoundException ex) {
-                JOptionPane.showMessageDialog(null, "Erro ao inserir paciente\n" + ex.getMessage());
-            } catch (SQLException ex) {
-                JOptionPane.showMessageDialog(null, "Erro ao inserir paciente\n" + ex.getMessage());
-            }
-
-        }
-
+            
         try {
-            conecta.desconecta();
+            if(flag == 1){
+            mod.salvar(usu);
+            JOptionPane.showMessageDialog(null, "Registro inserido com sucesso");       
+            }
+            if(flag == 2){
+            mod.editar(usu);
+            JOptionPane.showMessageDialog(null, "Registro alterado com sucesso");   
+            }
+           
+            //   usu.setIdPaciente(Integer.valueOf(jLabelID.getText()));
+            
+            
+           
+            jTextFieldNomePaciente.setEnabled(false);
+            jTextFieldTelePaciente.setEnabled(false);
+            jTextFieldRuaPaciente.setEnabled(false);
+            jTextFieldNrPaciente.setEnabled(false);
+            jTextFieldComplemPaciente.setEnabled(false);
+            jTextFieldPesquisarPaciente.setEnabled(true);
+            
+            jTextFieldNomePaciente.setText("");
+            jTextFieldTelePaciente.setText("");
+            jTextFieldRuaPaciente.setText("");
+            jTextFieldNrPaciente.setText("");
+            jTextFieldComplemPaciente.setText("");
+            
+            jFormattedTextFieldRgPaciente.setText("");
+            jFormattedTextFieldRgPaciente.setEnabled(false);
+            jFormattedTextFieldEmailPaciente.setText("");
+            jFormattedTextFieldEmailPaciente.setEnabled(false);
+            jDateChooserDataNascimentoPac.setDate(null);
+            jDateChooserDataNascimentoPac.setEnabled(false);
+            jComboBoxBairroPaciente.setSelectedIndex(0);
+            jComboBoxBairroPaciente.setEnabled(false);
+            jComboBoxCidade.setSelectedIndex(0);
+            jComboBoxCidade.setEnabled(false);
+            jComboBoxEstado.setSelectedIndex(0);
+            jComboBoxEstado.setEnabled(false);
+            
+            jButtonAlterarPaciente.setEnabled(false);
+            jButtonCancelarPaciente.setEnabled(false);
+            jButtonExcluirPaciente.setEnabled(false);
+            jButtonNovoPaciente.setEnabled(true);
+            jButtonSalvarPaciente.setEnabled(false);
+            jButtonBuscarPaciente.setEnabled(true);
+            
+            
+              } catch (ClassNotFoundException ex) {
+            Logger.getLogger(FormPaciente.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SQLException ex) {
             Logger.getLogger(FormPaciente.class.getName()).log(Level.SEVERE, null, ex);
         }
+         
+
+        
+
     }//GEN-LAST:event_jButtonSalvarPacienteActionPerformed
 
     private void jButtonNovoPacienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonNovoPacienteActionPerformed
+        
         jTextFieldNomePaciente.setEnabled(true);
         jTextFieldTelePaciente.setEnabled(true);
         jTextFieldRuaPaciente.setEnabled(true);
@@ -660,8 +681,7 @@ public class FormPaciente extends javax.swing.JFrame {
         jTextFieldRuaPaciente.setEnabled(false);
         jTextFieldNrPaciente.setEnabled(false);
         jTextFieldComplemPaciente.setEnabled(false);
-        //  jTextFieldCidadePaciente.setEnabled(false);
-        //  jTextFieldEstadoPaciente.setEnabled(false);
+      
         jTextFieldPesquisarPaciente.setEnabled(true);
 
         jTextFieldNomePaciente.setText("");
@@ -669,9 +689,7 @@ public class FormPaciente extends javax.swing.JFrame {
         jTextFieldRuaPaciente.setText("");
         jTextFieldNrPaciente.setText("");
         jTextFieldComplemPaciente.setText("");
-        //  jTextFieldCidadePaciente.setText("");
-        //  jTextFieldEstadoPaciente.setText("");
-
+      
         jDateChooserDataNascimentoPac.setDate(null);
         jFormattedTextFieldRgPaciente.setText("");
         jFormattedTextFieldEmailPaciente.setText("");
@@ -694,48 +712,48 @@ public class FormPaciente extends javax.swing.JFrame {
     }//GEN-LAST:event_jButtonCancelarPacienteActionPerformed
 
     private void jButtonAlterarPacienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAlterarPacienteActionPerformed
-        jTextFieldNomePaciente.setEnabled(false);
-        jTextFieldTelePaciente.setEnabled(false);
-        jTextFieldRuaPaciente.setEnabled(false);
-        jTextFieldNrPaciente.setEnabled(false);
-        jTextFieldComplemPaciente.setEnabled(false);
-        //  jTextFieldCidadePaciente.setEnabled(false);
-        //  jTextFieldEstadoPaciente.setEnabled(false);
-        jTextFieldPesquisarPaciente.setEnabled(true);
-
-        jTextFieldNomePaciente.setText("");
-        jTextFieldTelePaciente.setText("");
-        jTextFieldRuaPaciente.setText("");
-        jTextFieldNrPaciente.setText("");
-        jTextFieldComplemPaciente.setText("");
-        //   jTextFieldCidadePaciente.setText("");
-        //   jTextFieldEstadoPaciente.setText("");
-
-        jDateChooserDataNascimentoPac.setDate(null);
-        jFormattedTextFieldRgPaciente.setText("");
-        jFormattedTextFieldEmailPaciente.setText("");
-        jComboBoxBairroPaciente.setSelectedIndex(0);
-        jFormattedTextFieldRgPaciente.setEnabled(false);
-        jFormattedTextFieldEmailPaciente.setEnabled(false);
-        jDateChooserDataNascimentoPac.setEnabled(false);
-        jComboBoxBairroPaciente.setEnabled(false);
-
+        flag = 2;
+        jTextFieldNomePaciente.setEnabled(true);
+        jTextFieldTelePaciente.setEnabled(true);
+        jTextFieldRuaPaciente.setEnabled(true);
+        jTextFieldNrPaciente.setEnabled(true);
+        jTextFieldComplemPaciente.setEnabled(true);       
+        jTextFieldPesquisarPaciente.setEnabled(false);
+        jFormattedTextFieldRgPaciente.setEnabled(true);
+        jFormattedTextFieldEmailPaciente.setEnabled(true);
+        jDateChooserDataNascimentoPac.setEnabled(true);
+        jComboBoxBairroPaciente.setEnabled(true);
+        jComboBoxCidade.setEnabled(true);
+        jComboBoxEstado.setEnabled(true);
+        
         jButtonAlterarPaciente.setEnabled(false);
-        jButtonCancelarPaciente.setEnabled(false);
-        jButtonExcluirPaciente.setEnabled(false);
-        jButtonNovoPaciente.setEnabled(true);
-        jButtonSalvarPaciente.setEnabled(false);
-        jButtonBuscarPaciente.setEnabled(true);
+        jButtonCancelarPaciente.setEnabled(true);
+        jButtonExcluirPaciente.setEnabled(true);
+        jButtonNovoPaciente.setEnabled(false);
+        jButtonSalvarPaciente.setEnabled(true);
+        jButtonBuscarPaciente.setEnabled(false);
     }//GEN-LAST:event_jButtonAlterarPacienteActionPerformed
 
     private void jButtonExcluirPacienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonExcluirPacienteActionPerformed
+        int resposta = 0;
+        resposta = JOptionPane.showConfirmDialog(rootPane, "Deseja realmente excluir o registro");
+        if (resposta == JOptionPane.YES_OPTION) {
+            usu.setIdPaciente(Integer.valueOf(jLabelID.getText()));
+            try {
+                mod.excluirUsu(usu);
+                usu.setIdPaciente(0);
+                            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(FormPaciente.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (SQLException ex) {
+                Logger.getLogger(FormPaciente.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
         jTextFieldNomePaciente.setEnabled(false);
         jTextFieldTelePaciente.setEnabled(false);
         jTextFieldRuaPaciente.setEnabled(false);
         jTextFieldNrPaciente.setEnabled(false);
         jTextFieldComplemPaciente.setEnabled(false);
-        //  jTextFieldCidadePaciente.setEnabled(false);
-        // jTextFieldEstadoPaciente.setEnabled(false);
+      
         jTextFieldPesquisarPaciente.setEnabled(true);
 
         jTextFieldNomePaciente.setText("");
@@ -743,9 +761,7 @@ public class FormPaciente extends javax.swing.JFrame {
         jTextFieldRuaPaciente.setText("");
         jTextFieldNrPaciente.setText("");
         jTextFieldComplemPaciente.setText("");
-        //  jTextFieldCidadePaciente.setText("");
-        //  jTextFieldEstadoPaciente.setText("");
-
+      
         jDateChooserDataNascimentoPac.setDate(null);
         jFormattedTextFieldRgPaciente.setText("");
         jFormattedTextFieldEmailPaciente.setText("");
@@ -754,6 +770,10 @@ public class FormPaciente extends javax.swing.JFrame {
         jFormattedTextFieldEmailPaciente.setEnabled(false);
         jDateChooserDataNascimentoPac.setEnabled(false);
         jComboBoxBairroPaciente.setEnabled(false);
+        jComboBoxCidade.setSelectedIndex(0);
+        jComboBoxCidade.setEnabled(false);
+        jComboBoxEstado.setSelectedIndex(0);
+        jComboBoxEstado.setEnabled(false);
 
         jButtonAlterarPaciente.setEnabled(false);
         jButtonCancelarPaciente.setEnabled(false);
@@ -764,75 +784,98 @@ public class FormPaciente extends javax.swing.JFrame {
     }//GEN-LAST:event_jButtonExcluirPacienteActionPerformed
 
     private void jButtonBuscarPacienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBuscarPacienteActionPerformed
-        usu.setPac_nome(jTextFieldPesquisarPaciente.getText());
+        
         BeansPaciente pac = new BeansPaciente();
+        pac.setPac_nome(jTextFieldPesquisarPaciente.getText());
         try {
-            pac = mod.buscaPac(usu);
-
-            if (pac.getIdPaciente()!=0) { // usado para verificar se a consulta retorna resultado
-
-                jTextFieldNomePaciente.setText(usu.getPac_nome());
+            pac = mod.buscaPac(pac); 
+            System.out.println(pac.getIdPaciente());
+            flag1 = pac.getIdPaciente();// verifica se existe a consulta retorna resultado
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(FormPaciente.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(FormPaciente.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        if(flag1>0){ // só executa o códigp se a busca retorna algum resultado
+            
+            try {
+                jTextFieldNomePaciente.setText(pac.getPac_nome());
                 // criar data a partir da string pega do usu.getPac_nascimento();
-                String data = usu.getPac_nascimento();
+                String data = pac.getPac_nascimento();
                 SimpleDateFormat formatador = new SimpleDateFormat("yyyy-MM-dd");
                 Date dataConvertida = formatador.parse(data);
-                jDateChooserDataNascimentoPac.setDate(dataConvertida);
-
-            // continuação do filtro
-                jFormattedTextFieldRgPaciente.setText(usu.getPac_email());
-                jFormattedTextFieldEmailPaciente.setText(usu.getPac_email());
-                jTextFieldTelePaciente.setText(usu.getPac_telefone());
-                jTextFieldRuaPaciente.setText(usu.getPac_rua());
-                jTextFieldNrPaciente.setText(String.valueOf(usu.getPac_nr()));
-                jTextFieldComplemPaciente.setText(usu.getPac_complemento());
-
+                jDateChooserDataNascimentoPac.setDate(dataConvertida);                
+                // continuação do filtro
+                jFormattedTextFieldRgPaciente.setText(pac.getPac_email());
+                jFormattedTextFieldEmailPaciente.setText(pac.getPac_email());
+                jTextFieldTelePaciente.setText(pac.getPac_telefone());
+                jTextFieldRuaPaciente.setText(pac.getPac_rua());
+                jTextFieldNrPaciente.setText(String.valueOf(pac.getPac_nr()));
+                jTextFieldComplemPaciente.setText(pac.getPac_complemento());
+                jLabelID.setText(String.valueOf(pac.getIdPaciente()));
                 // preenche o bairro no combo quando é clicado em buscar
-                String ba = bairro.buscaBairro(usu.getPac_bairro());
+                String ba = bairro.buscaBairro(pac.getPac_bairro());
                 preencherbairros();
                 jComboBoxBairroPaciente.setSelectedItem(ba);
-
                 // preenche o estado no combo quando é clicado em buscar
-                String es = estado.buscaEstado(usu.getPac_estado());
+                String es = estado.buscaEstado(pac.getPac_estado());
                 preencheEstados();
                 jComboBoxEstado.setSelectedItem(es);
-
                 // preenche cidade no combo quando é clicado em buscar
-                String cid = cidade.buscaCidade(usu.getPac_cidade());
-                jComboBoxCidade.setSelectedItem(cid);
-
-                jTextFieldNomePaciente.setEnabled(true);
-                jTextFieldTelePaciente.setEnabled(true);
-                jTextFieldRuaPaciente.setEnabled(true);
-                jTextFieldNrPaciente.setEnabled(true);
-                jTextFieldComplemPaciente.setEnabled(true);
-        //  jTextFieldCidadePaciente.setEnabled(true);
-                //  jTextFieldEstadoPaciente.setEnabled(true);
-                jTextFieldPesquisarPaciente.setEnabled(false);
-
-                jFormattedTextFieldRgPaciente.setEnabled(true);
-                jFormattedTextFieldEmailPaciente.setEnabled(true);
-                jDateChooserDataNascimentoPac.setEnabled(true);
-                jComboBoxBairroPaciente.setEnabled(true);
-
+                String cid = cidade.buscaCidade(pac.getPac_cidade());
+                jComboBoxCidade.setSelectedItem(cid);               
                 jButtonAlterarPaciente.setEnabled(true);
                 jButtonCancelarPaciente.setEnabled(true);
                 jButtonExcluirPaciente.setEnabled(true);
                 jButtonNovoPaciente.setEnabled(false);
                 jButtonSalvarPaciente.setEnabled(false);
                 jButtonBuscarPaciente.setEnabled(true);
-
-                jComboBoxCidade.setEnabled(true);
-
-                jComboBoxEstado.setEnabled(true);
-
+            } catch (ParseException ex) {
+                Logger.getLogger(FormPaciente.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(FormPaciente.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (SQLException ex) {
+                Logger.getLogger(FormPaciente.class.getName()).log(Level.SEVERE, null, ex);
             }
 
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(FormPaciente.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SQLException ex) {
-            Logger.getLogger(FormPaciente.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ParseException ex) {
-            Logger.getLogger(FormPaciente.class.getName()).log(Level.SEVERE, null, ex);
+                
+        }else{
+              jTextFieldNomePaciente.setEnabled(false);
+        jTextFieldTelePaciente.setEnabled(false);
+        jTextFieldRuaPaciente.setEnabled(false);
+        jTextFieldNrPaciente.setEnabled(false);
+        jTextFieldComplemPaciente.setEnabled(false);
+      
+        jTextFieldPesquisarPaciente.setEnabled(true);
+
+        jTextFieldNomePaciente.setText("");
+        jTextFieldTelePaciente.setText("");
+        jTextFieldRuaPaciente.setText("");
+        jTextFieldNrPaciente.setText("");
+        jTextFieldComplemPaciente.setText("");
+      
+        jDateChooserDataNascimentoPac.setDate(null);
+        jFormattedTextFieldRgPaciente.setText("");
+        jFormattedTextFieldEmailPaciente.setText("");
+        jComboBoxBairroPaciente.setSelectedIndex(0);
+        jFormattedTextFieldRgPaciente.setEnabled(false);
+        jFormattedTextFieldEmailPaciente.setEnabled(false);
+        jDateChooserDataNascimentoPac.setEnabled(false);
+        jComboBoxBairroPaciente.setEnabled(false);
+        jComboBoxCidade.setSelectedIndex(0);
+        jComboBoxCidade.setEnabled(false);
+        jComboBoxEstado.setSelectedIndex(0);
+        jComboBoxEstado.setEnabled(false);
+        
+        jLabelID.setText(String.valueOf(0));
+
+        jButtonAlterarPaciente.setEnabled(false);
+        jButtonCancelarPaciente.setEnabled(false);
+        jButtonExcluirPaciente.setEnabled(false);
+        jButtonNovoPaciente.setEnabled(true);
+        jButtonSalvarPaciente.setEnabled(false);
+        jButtonBuscarPaciente.setEnabled(true);
         }
 
 
@@ -931,6 +974,7 @@ public class FormPaciente extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
+    private javax.swing.JLabel jLabelID;
     private javax.swing.JLabel jLabelTituloPaciente;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;

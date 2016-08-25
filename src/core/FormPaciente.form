@@ -143,6 +143,8 @@
                           <Component id="jTextFieldPesquisarPaciente" min="-2" pref="391" max="-2" attributes="0"/>
                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
                           <Component id="jButtonBuscarPaciente" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="55" max="-2" attributes="0"/>
+                          <Component id="jLabelID" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                   <EmptySpace pref="35" max="32767" attributes="0"/>
@@ -178,6 +180,7 @@
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="jTextFieldPesquisarPaciente" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="jButtonBuscarPaciente" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="jLabelID" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="jScrollPane2" min="-2" pref="138" max="-2" attributes="0"/>
@@ -488,6 +491,11 @@
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonBuscarPacienteActionPerformed"/>
           </Events>
+        </Component>
+        <Component class="javax.swing.JLabel" name="jLabelID">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="id"/>
+          </Properties>
         </Component>
       </SubComponents>
     </Container>
