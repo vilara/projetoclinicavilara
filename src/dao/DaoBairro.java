@@ -22,7 +22,7 @@ public class DaoBairro {
         conex.executaSql("SELECT * FROM bairro WHERE bairro_cod='" + idBairro + "'"); // método para buscar o id do bairro no BD
         conex.rs.first();
         String resp = conex.rs.getString("bairro_nome");
-        conex.desconecta();
+      //  conex.desconecta();
         return resp;
     }
 }

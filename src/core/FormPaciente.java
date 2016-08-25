@@ -19,9 +19,11 @@ import dao.DaoPaciente;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
+import javax.swing.ListSelectionModel;
 import model.BeansBairro;
 import model.BeansCidade;
 import model.BeansEstado;
+import model.ModeloTabela;
 
 /**
  *
@@ -51,6 +53,9 @@ public class FormPaciente extends javax.swing.JFrame {
     static int flag1 = 0; // está sendo usado para verificar se houve retorno da busca pela consulta no Banco de Dados
     public FormPaciente() throws ClassNotFoundException, SQLException {
         initComponents();
+        
+        preencherTabela("SELECT * FROM pacientes");
+        
         try {
             preencherbairros();
         } catch (ClassNotFoundException ex) {
@@ -97,7 +102,7 @@ public class FormPaciente extends javax.swing.JFrame {
         jComboBoxEstado = new javax.swing.JComboBox();
         jComboBoxCidade = new javax.swing.JComboBox();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTable2 = new javax.swing.JTable();
+        jTablePaciente = new javax.swing.JTable();
         jButtonNovoPaciente = new javax.swing.JButton();
         jButtonSalvarPaciente = new javax.swing.JButton();
         jButtonCancelarPaciente = new javax.swing.JButton();
@@ -245,7 +250,7 @@ public class FormPaciente extends javax.swing.JFrame {
                 .addContainerGap(26, Short.MAX_VALUE))
         );
 
-        jTable2.setModel(new javax.swing.table.DefaultTableModel(
+        jTablePaciente.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {},
                 {},
@@ -256,7 +261,12 @@ public class FormPaciente extends javax.swing.JFrame {
 
             }
         ));
-        jScrollPane2.setViewportView(jTable2);
+        jTablePaciente.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTablePacienteMouseClicked(evt);
+            }
+        });
+        jScrollPane2.setViewportView(jTablePaciente);
 
         jButtonNovoPaciente.setText("NOVO");
         jButtonNovoPaciente.addActionListener(new java.awt.event.ActionListener() {
@@ -567,6 +577,7 @@ public class FormPaciente extends javax.swing.JFrame {
                
       
             usu.setPac_nome(jTextFieldNomePaciente.getText());
+             System.out.println(usu.getPac_nome());
             SimpleDateFormat formatador = new SimpleDateFormat("yyyy-MM-dd");// transforma a data para o formato do banco de dados
 
             usu.setPac_nascimento(formatador.format(jDateChooserDataNascimentoPac.getDate()));
@@ -588,20 +599,21 @@ public class FormPaciente extends javax.swing.JFrame {
             // pega o índice da lista baseado no index do combobox menos 1 e insere na lista que armazena os id dos estados
             int idEstado = (int) listaEstado.get(jComboBoxEstado.getSelectedIndex() - 1);
             usu.setPac_estado(idEstado);
-            
+            usu.setIdPaciente(Integer.valueOf(jLabelID.getText()));
         try {
             if(flag == 1){
             mod.salvar(usu);
             JOptionPane.showMessageDialog(null, "Registro inserido com sucesso");       
             }
             if(flag == 2){
+            System.out.println(usu.getPac_nome());
             mod.editar(usu);
             JOptionPane.showMessageDialog(null, "Registro alterado com sucesso");   
             }
            
             //   usu.setIdPaciente(Integer.valueOf(jLabelID.getText()));
             
-            
+            preencherTabela("SELECT * FROM pacientes");
            
             jTextFieldNomePaciente.setEnabled(false);
             jTextFieldTelePaciente.setEnabled(false);
@@ -741,6 +753,7 @@ public class FormPaciente extends javax.swing.JFrame {
             usu.setIdPaciente(Integer.valueOf(jLabelID.getText()));
             try {
                 mod.excluirUsu(usu);
+                preencherTabela("SELECT * FROM pacientes");
                 usu.setIdPaciente(0);
                             } catch (ClassNotFoundException ex) {
                 Logger.getLogger(FormPaciente.class.getName()).log(Level.SEVERE, null, ex);
@@ -748,6 +761,7 @@ public class FormPaciente extends javax.swing.JFrame {
                 Logger.getLogger(FormPaciente.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+        
         jTextFieldNomePaciente.setEnabled(false);
         jTextFieldTelePaciente.setEnabled(false);
         jTextFieldRuaPaciente.setEnabled(false);
@@ -908,9 +922,109 @@ public class FormPaciente extends javax.swing.JFrame {
 
     }//GEN-LAST:event_jComboBoxEstadoActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
+    private void jTablePacienteMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTablePacienteMouseClicked
+                   String id_usu = ""+jTablePaciente.getValueAt(jTablePaciente.getSelectedRow(), 0);
+        try {
+            conecta.conect();
+            conecta.executaSql("SELECT * FROM pacientes WHERE idPaciente="+id_usu+"");
+            conecta.rs.first();
+            
+            
+             jTextFieldNomePaciente.setText(conecta.rs.getString("pac_nome"));
+                // criar data a partir da string pega do usu.getPac_nascimento();
+                String data = conecta.rs.getString("pac_nascimento");
+                SimpleDateFormat formatador = new SimpleDateFormat("yyyy-MM-dd");
+                Date dataConvertida = formatador.parse(data);
+                jDateChooserDataNascimentoPac.setDate(dataConvertida);                
+                // continuação do filtro
+                jFormattedTextFieldRgPaciente.setText(conecta.rs.getString("pac_rg"));
+                jFormattedTextFieldEmailPaciente.setText(conecta.rs.getString("pac_email"));
+                jTextFieldTelePaciente.setText(conecta.rs.getString("pac_telefone"));
+                jTextFieldRuaPaciente.setText(conecta.rs.getString("pac_rua"));
+                jTextFieldNrPaciente.setText(String.valueOf(conecta.rs.getInt("pac_nr")));
+                jTextFieldComplemPaciente.setText(conecta.rs.getString("pac_complemento"));
+                jLabelID.setText(String.valueOf(conecta.rs.getInt("idPaciente")));
+                // preenche o bairro no combo quando é clicado em buscar
+                int b = conecta.rs.getInt("pac_bairro");
+                int e = conecta.rs.getInt("pac_estado");
+                int c = conecta.rs.getInt("pac_cidades");
+                
+                String ba = bairro.buscaBairro(b);
+                preencherbairros();
+                jComboBoxBairroPaciente.setSelectedItem(ba);
+                
+                String es = estado.buscaEstado(e);
+                preencheEstados();
+                jComboBoxEstado.setSelectedItem(es);
+                
+                           
+                String cid = cidade.buscaCidade(c);
+                jComboBoxCidade.setSelectedItem(cid);  
+                              
+                
+                jButtonAlterarPaciente.setEnabled(true);
+                jButtonCancelarPaciente.setEnabled(true);
+                jButtonExcluirPaciente.setEnabled(true);
+                jButtonNovoPaciente.setEnabled(false);
+                jButtonSalvarPaciente.setEnabled(false);
+                jButtonBuscarPaciente.setEnabled(true);
+          
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(FormUsuario.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(FormUsuario.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ParseException ex) {
+            Logger.getLogger(FormPaciente.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        try {
+            conecta.desconecta();
+        } catch (SQLException ex) {
+            Logger.getLogger(FormMedico.class.getName()).log(Level.SEVERE, null, ex);
+        }        // TODO add your handling code here:
+    }//GEN-LAST:event_jTablePacienteMouseClicked
+
+      public void preencherTabela(String Sql) throws ClassNotFoundException, SQLException{
+        ArrayList dados = new ArrayList();
+        String[] colunas = new String[]{"ID","Paciente","Idt","Telefone","Email"};
+        
+        conecta.conect();
+        conecta.executaSql(Sql);
+        
+        try{
+            conecta.rs.first();
+            do {                
+                dados.add(new Object[]{
+                    conecta.rs.getInt("idPaciente"),
+                    conecta.rs.getString("pac_nome"),
+                    conecta.rs.getString("pac_rg"),
+                    conecta.rs.getString("pac_telefone"),
+                    conecta.rs.getString("pac_email")
+                });
+            } while (conecta.rs.next());
+        }catch(SQLException ex){
+            JOptionPane.showMessageDialog(rootPane, "erro ao preencher arraylist"+ex.getMessage());
+        }
+        ModeloTabela modelo = new ModeloTabela(dados, colunas);
+        
+        jTablePaciente.setModel(modelo);
+        jTablePaciente.getColumnModel().getColumn(0).setPreferredWidth(80); // O zero significa qua é a primeira coluna do array
+        jTablePaciente.getColumnModel().getColumn(0).setResizable(false);    // não pode ser modificado o tamanho da coluna
+        jTablePaciente.getColumnModel().getColumn(1).setPreferredWidth(300); // O zero significa qua é a primeira coluna do array
+        jTablePaciente.getColumnModel().getColumn(1).setResizable(false);    // não pode ser modificado o tamanho da coluna
+        jTablePaciente.getColumnModel().getColumn(2).setPreferredWidth(121); // O zero significa qua é a primeira coluna do array
+        jTablePaciente.getColumnModel().getColumn(2).setResizable(false);    // não pode ser modificado o tamanho da coluna
+        jTablePaciente.getColumnModel().getColumn(3).setPreferredWidth(140); // O zero significa qua é a primeira coluna do array
+        jTablePaciente.getColumnModel().getColumn(3).setResizable(false);    // não pode ser modificado o tamanho da coluna
+        jTablePaciente.getColumnModel().getColumn(4).setPreferredWidth(215); // O zero significa qua é a primeira coluna do array
+        jTablePaciente.getColumnModel().getColumn(4).setResizable(false);    // não pode ser modificado o tamanho da coluna
+        jTablePaciente.getTableHeader().setReorderingAllowed(false);   // não pode reordenar a tabela
+        jTablePaciente.setAutoResizeMode(jTablePaciente.AUTO_RESIZE_OFF); // tabela não pode redimensionada
+        jTablePaciente.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);  // só seleciona um campo por vez
+        conecta.desconecta();
+        
+        
+    }
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -981,7 +1095,7 @@ public class FormPaciente extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable jTable1;
-    private javax.swing.JTable jTable2;
+    private javax.swing.JTable jTablePaciente;
     private javax.swing.JTextField jTextFieldComplemPaciente;
     private javax.swing.JTextField jTextFieldNomePaciente;
     private javax.swing.JTextField jTextFieldNrPaciente;
