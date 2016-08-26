@@ -815,7 +815,14 @@ public class FormPaciente extends javax.swing.JFrame {
         }
         
         if(flag1>0){ // só executa o códigp se a busca retorna algum resultado
-            
+                String sql = "SELECT * FROM pacientes WHERE pac_nome like '%"+jTextFieldPesquisarPaciente.getText()+"%'";
+            try {
+                preencherTabela(sql);
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(FormPaciente.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (SQLException ex) {
+                Logger.getLogger(FormPaciente.class.getName()).log(Level.SEVERE, null, ex);
+            }
             try {
                 jTextFieldNomePaciente.setText(pac.getPac_nome());
                 // criar data a partir da string pega do usu.getPac_nascimento();
