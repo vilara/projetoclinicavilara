@@ -19,6 +19,7 @@ import dao.DaoPaciente;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
+import javafx.print.Collation;
 import javax.swing.ListSelectionModel;
 import model.BeansBairro;
 import model.BeansCidade;
@@ -455,7 +456,7 @@ public class FormPaciente extends javax.swing.JFrame {
             jComboBoxBairroPaciente.addItem(conecta.rs.getString("bairro_nome")); // preenchimento automático do combobox de bairros buscando do banco de dados
             listaBairro.add(conecta.rs.getInt("bairro_cod")); // seleciona o id do campo escolhis
         } while (conecta.rs.next());
-
+            System.out.println("qtde de Bairros: "+listaBairro.size());
         conecta.desconecta();
     }
 
@@ -481,7 +482,7 @@ public class FormPaciente extends javax.swing.JFrame {
             jComboBoxEstado.addItem(conecta.rs.getString("sigla"));
             listaEstado.add(conecta.rs.getInt("cod_estados")); // seleciona o id do campo escolhis
         }
-
+        System.out.println("qtde de estados: "+listaEstado.size());
         conecta.conect();
         // System.out.println(listaEstado);
     }
@@ -496,8 +497,9 @@ public class FormPaciente extends javax.swing.JFrame {
         while (conecta.rs.next()) {
             jComboBoxCidade.addItem(conecta.rs.getString("nome"));
             listaCidade.add(conecta.rs.getInt("cod_cidades"));
+           
         }
-
+        System.out.println("qtde de cidades: "+listaCidade.size());
         conecta.conect();
         //    System.out.println(listaCidade);
     }
@@ -599,13 +601,14 @@ public class FormPaciente extends javax.swing.JFrame {
             // pega o índice da lista baseado no index do combobox menos 1 e insere na lista que armazena os id dos estados
             int idEstado = (int) listaEstado.get(jComboBoxEstado.getSelectedIndex() - 1);
             usu.setPac_estado(idEstado);
-            usu.setIdPaciente(Integer.valueOf(jLabelID.getText()));
+            
         try {
             if(flag == 1){
             mod.salvar(usu);
             JOptionPane.showMessageDialog(null, "Registro inserido com sucesso");       
             }
             if(flag == 2){
+            usu.setIdPaciente(Integer.valueOf(jLabelID.getText()));
             System.out.println(usu.getPac_nome());
             mod.editar(usu);
             JOptionPane.showMessageDialog(null, "Registro alterado com sucesso");   
@@ -908,6 +911,7 @@ public class FormPaciente extends javax.swing.JFrame {
             jComboBoxCidade.removeAllItems();
             jComboBoxCidade.addItem("Selecione...");
             try {
+                listaCidade.clear();
                 preencheCidades(String.valueOf(pos));
             } catch (ClassNotFoundException ex) {
                 Logger.getLogger(FormPaciente.class.getName()).log(Level.SEVERE, null, ex);
