@@ -16,10 +16,14 @@ import javax.swing.JOptionPane;
 import model.BeansPaciente;
 import util.ConexaoBD;
 import dao.DaoPaciente;
+import java.awt.Image;
+import java.io.File;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import javafx.print.Collation;
+import javax.swing.ImageIcon;
+import javax.swing.JFileChooser;
 import javax.swing.ListSelectionModel;
 import model.BeansBairro;
 import model.BeansCidade;
@@ -115,6 +119,11 @@ public class FormPaciente extends javax.swing.JFrame {
         jButtonBuscarPaciente = new javax.swing.JButton();
         jLabelID = new javax.swing.JLabel();
         jLabelTituloPaciente = new javax.swing.JLabel();
+        jPanel3 = new javax.swing.JPanel();
+        jLabelFoto = new javax.swing.JLabel();
+        jLabel14 = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
+        jTextFieldCaminhoFoto = new javax.swing.JTextField();
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -416,32 +425,85 @@ public class FormPaciente extends javax.swing.JFrame {
         );
 
         jLabelTituloPaciente.setFont(new java.awt.Font("Times New Roman", 0, 24)); // NOI18N
-        jLabelTituloPaciente.setText("Cadastro de Pacientes");
+        jLabelTituloPaciente.setText("CADASTRO DE PACIENTES");
+
+        jPanel3.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        jLabelFoto.setBackground(new java.awt.Color(204, 255, 204));
+        jLabelFoto.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/fundo_telaprincipal.jpg"))); // NOI18N
+        jLabelFoto.setText("Foto");
+
+        jLabel14.setText("FOTO");
+
+        jButton1.setText("Carregar foto");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(131, 131, 131)
+                        .addComponent(jLabel14))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(45, 45, 45)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jTextFieldCaminhoFoto)
+                            .addComponent(jLabelFoto, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(48, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jButton1)
+                .addGap(85, 85, 85))
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel14)
+                .addGap(4, 4, 4)
+                .addComponent(jLabelFoto, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(39, 39, 39)
+                .addComponent(jButton1)
+                .addGap(18, 18, 18)
+                .addComponent(jTextFieldCaminhoFoto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabelTituloPaciente)
-                .addGap(377, 377, 377))
-            .addGroup(layout.createSequentialGroup()
                 .addGap(25, 25, 25)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(26, Short.MAX_VALUE))
+                .addGap(42, 42, 42)
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(67, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabelTituloPaciente)
+                .addGap(496, 496, 496))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap()
                 .addComponent(jLabelTituloPaciente)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(155, 155, 155))
         );
 
-        setSize(new java.awt.Dimension(990, 592));
+        setSize(new java.awt.Dimension(1368, 700));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
@@ -995,6 +1057,25 @@ public class FormPaciente extends javax.swing.JFrame {
         }        // TODO add your handling code here:
     }//GEN-LAST:event_jTablePacienteMouseClicked
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+       JFileChooser arquivo = new JFileChooser();
+       arquivo.setDialogTitle("Selecione uma foto");
+       arquivo.setFileSelectionMode(JFileChooser.FILES_ONLY);
+       
+       int opcao = arquivo.showOpenDialog(this);
+       if(opcao == JFileChooser.APPROVE_OPTION){
+           File file = new File("Caminho");
+           file = arquivo.getSelectedFile(); //recebe o caminho
+           String filename = file.getAbsolutePath();
+           //jTextFieldCaminhoFoto.setText(filename);
+           
+           ImageIcon imagem = new ImageIcon(arquivo.getSelectedFile().getPath());
+           jLabelFoto.setIcon(new ImageIcon(imagem.getImage().getScaledInstance(jLabelFoto.getWidth(), jLabelFoto.getHeight(), Image.SCALE_DEFAULT)));
+           
+       }
+       
+    }//GEN-LAST:event_jButton1ActionPerformed
+
       public void preencherTabela(String Sql) throws ClassNotFoundException, SQLException{
         ArrayList dados = new ArrayList();
         String[] colunas = new String[]{"ID","Paciente","Idt","Telefone","Email"};
@@ -1075,6 +1156,7 @@ public class FormPaciente extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButtonAlterarPaciente;
     private javax.swing.JButton jButtonBuscarPaciente;
     private javax.swing.JButton jButtonCancelarPaciente;
@@ -1092,6 +1174,7 @@ public class FormPaciente extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -1099,14 +1182,17 @@ public class FormPaciente extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
+    private javax.swing.JLabel jLabelFoto;
     private javax.swing.JLabel jLabelID;
     private javax.swing.JLabel jLabelTituloPaciente;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable jTable1;
     private javax.swing.JTable jTablePaciente;
+    private javax.swing.JTextField jTextFieldCaminhoFoto;
     private javax.swing.JTextField jTextFieldComplemPaciente;
     private javax.swing.JTextField jTextFieldNomePaciente;
     private javax.swing.JTextField jTextFieldNrPaciente;
