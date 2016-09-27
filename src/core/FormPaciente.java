@@ -641,7 +641,7 @@ public class FormPaciente extends javax.swing.JFrame {
                
       
             usu.setPac_nome(jTextFieldNomePaciente.getText());
-             System.out.println(usu.getPac_nome());
+            System.out.println(usu.getPac_nome());
             SimpleDateFormat formatador = new SimpleDateFormat("yyyy-MM-dd");// transforma a data para o formato do banco de dados
 
             usu.setPac_nascimento(formatador.format(jDateChooserDataNascimentoPac.getDate()));
@@ -1067,7 +1067,7 @@ public class FormPaciente extends javax.swing.JFrame {
            File file = new File("Caminho");
            file = arquivo.getSelectedFile(); //recebe o caminho
            String filename = file.getAbsolutePath();
-           //jTextFieldCaminhoFoto.setText(filename);
+           jTextFieldCaminhoFoto.setText(filename);
            
            ImageIcon imagem = new ImageIcon(arquivo.getSelectedFile().getPath());
            jLabelFoto.setIcon(new ImageIcon(imagem.getImage().getScaledInstance(jLabelFoto.getWidth(), jLabelFoto.getHeight(), Image.SCALE_DEFAULT)));

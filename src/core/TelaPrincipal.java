@@ -159,6 +159,11 @@ public class TelaPrincipal extends javax.swing.JFrame {
         jMenuCadastro.add(jMenuCadClientes);
 
         jMenuCadPaciente.setText("Paciente");
+        jMenuCadPaciente.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuCadPacienteActionPerformed(evt);
+            }
+        });
         jMenuCadastro.add(jMenuCadPaciente);
 
         jMenuCadUsuarios.setText("Usuários");
@@ -211,7 +216,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
     private void jButtonCadMedicosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCadMedicosActionPerformed
        FormMedico telaMedico;
      if(tela == null){  // usado para não deixar abrir mais de uma tela de usuário
-            tela = new FormUsuario();
+         tela = new FormUsuario();
          tela.setVisible(true); 
          tela.setResizable(false);
         }else{
@@ -268,15 +273,28 @@ public class TelaPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuCadUsuariosActionPerformed
 
     private void jButtonCadPacientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCadPacientesActionPerformed
-         if(tela == null){  // usado para não deixar abrir mais de uma tela de usuário
-            tela = new FormUsuario();
-         tela.setVisible(true); 
-         tela.setResizable(false);
-        }else{
-         tela.setVisible(true); 
-         tela.setResizable(false); 
-        }
+             FormPaciente telaPaciente;
+        try {
+            telaPaciente = new FormPaciente();
+             telaPaciente.setVisible(true);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(TelaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(TelaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+        } 
     }//GEN-LAST:event_jButtonCadPacientesActionPerformed
+
+    private void jMenuCadPacienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuCadPacienteActionPerformed
+                FormPaciente telaPaciente;
+        try {
+            telaPaciente = new FormPaciente();
+             telaPaciente.setVisible(true);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(TelaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(TelaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+        } 
+    }//GEN-LAST:event_jMenuCadPacienteActionPerformed
 
     /**
      * @param args the command line arguments
