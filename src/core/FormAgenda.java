@@ -6,9 +6,15 @@
 package core;
 
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.ListSelectionModel;
+import model.BeansAgenda;
 import model.ModeloTabela;
 import util.ConexaoBD;
 
@@ -19,9 +25,74 @@ import util.ConexaoBD;
 public class FormAgenda extends javax.swing.JFrame {
 
     ConexaoBD conecta = new ConexaoBD();
-    
-    public FormAgenda() {
+    BeansAgenda mod = new BeansAgenda();
+
+    /**
+     * Creates new form FormAgenda
+     */
+    public FormAgenda() throws ClassNotFoundException, SQLException {
         initComponents();
+        Calendar data = Calendar.getInstance();
+        Date d = data.getTime();
+        SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd");
+        dateformat.format(d);
+
+        String dtHoje;
+        dtHoje = dateformat.format(d); // data de hoje
+
+        String status = "Aberto";
+      //  JOptionPane.showMessageDialog(null, dtHoje);
+        preencherTabela("SELECT * FROM projetoclinicavilara.agendamento INNER JOIN pacientes "
+                + "ON agendamento.agenda_codpac = pacientes.idPaciente INNER JOIN medicos "
+                + "ON agendamento.agenda_codmedico = medicos.idMedicos "
+                + "WHERE agendamento.agenda_data = '"+dtHoje+"' "
+                + "AND agendamento.agenda_status = '"+status+"'");
+
+    }
+
+    public void preencherTabela(String Sql) throws ClassNotFoundException, SQLException {
+        ArrayList dados = new ArrayList();
+        String[] colunas = new String[]{"ID", "Nome Paciente", "Turno", "Data", "Status", "Médico"};
+
+        conecta.conect();
+        conecta.executaSql(Sql);
+
+        try {
+            conecta.rs.first();
+            do {
+                dados.add(new Object[]{
+                    conecta.rs.getInt("idAgenda"),
+                    conecta.rs.getString("pac_nome"),
+                    conecta.rs.getString("agenda_turno"),
+                    conecta.rs.getString("agenda_data"),
+                    conecta.rs.getString("agenda_status"),
+                    conecta.rs.getString("nome_medico"),});
+            } while (conecta.rs.next());
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(rootPane, "erro ao preencher arraylist" + ex.getMessage());
+        }
+        ModeloTabela modelo = new ModeloTabela(dados, colunas);
+
+        jTableAgendamento.setModel(modelo);
+        jTableAgendamento.getColumnModel().getColumn(0).setPreferredWidth(80); // O zero significa qua é a primeira coluna do array
+        jTableAgendamento.getColumnModel().getColumn(0).setResizable(false);    // não pode ser modificado o tamanho da coluna
+        jTableAgendamento.getColumnModel().getColumn(1).setPreferredWidth(228); // O zero significa qua é a primeira coluna do array
+        jTableAgendamento.getColumnModel().getColumn(1).setResizable(false);    // não pode ser modificado o tamanho da coluna
+        jTableAgendamento.getColumnModel().getColumn(2).setPreferredWidth(80); // O zero significa qua é a primeira coluna do array
+        jTableAgendamento.getColumnModel().getColumn(2).setResizable(false);    // não pode ser modificado o tamanho da coluna
+        jTableAgendamento.getColumnModel().getColumn(3).setPreferredWidth(120); // O zero significa qua é a primeira coluna do array
+        jTableAgendamento.getColumnModel().getColumn(3).setResizable(false);    // não pode ser modificado o tamanho da coluna
+
+        jTableAgendamento.getColumnModel().getColumn(4).setPreferredWidth(105); // O zero significa qua é a primeira coluna do array
+        jTableAgendamento.getColumnModel().getColumn(4).setResizable(false);    // não pode ser modificado o tamanho da coluna
+
+        jTableAgendamento.getColumnModel().getColumn(5).setPreferredWidth(129); // O zero significa qua é a primeira coluna do array
+        jTableAgendamento.getColumnModel().getColumn(5).setResizable(false);    // não pode ser modificado o tamanho da coluna
+        jTableAgendamento.getTableHeader().setReorderingAllowed(false);   // não pode reordenar a tabela
+        jTableAgendamento.setAutoResizeMode(jTableAgendamento.AUTO_RESIZE_OFF); // tabela não pode redimensionada
+        jTableAgendamento.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);  // só seleciona um campo por vez
+        conecta.desconecta();
+
     }
 
     /**
@@ -34,47 +105,16 @@ public class FormAgenda extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
-        jTextFieldAgendaPaciente = new javax.swing.JTextField();
-        jComboBoxAgendaTurno = new javax.swing.JComboBox();
-        jButtonBuscarAgendaPaciente = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTableAgenda = new javax.swing.JTable();
-        jComboBox1 = new javax.swing.JComboBox();
-        jTextField1 = new javax.swing.JTextField();
-        jButtonFinalizarAgeendamento = new javax.swing.JButton();
-        jButtonCancelarAgendamento = new javax.swing.JButton();
-        jDateChooser1 = new com.toedter.calendar.JDateChooser();
+        jTableAgendamento = new javax.swing.JTable();
+        jButtonAtenderAgendamento = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
-        jLabel2.setText("Paciente");
-
-        jLabel3.setText("Médico");
-
-        jLabel4.setText("Data");
-
-        jLabel5.setText("Motivo");
-
-        jLabel6.setText("Turno");
-
-        jComboBoxAgendaTurno.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Matutino", "Vespertino", "Noturno" }));
-
-        jButtonBuscarAgendaPaciente.setText("Buscar");
-        jButtonBuscarAgendaPaciente.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonBuscarAgendaPacienteActionPerformed(evt);
-            }
-        });
-
-        jTableAgenda.setModel(new javax.swing.table.DefaultTableModel(
+        jTableAgendamento.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {},
                 {},
@@ -85,160 +125,66 @@ public class FormAgenda extends javax.swing.JFrame {
 
             }
         ));
-        jScrollPane1.setViewportView(jTableAgenda);
+        jScrollPane1.setViewportView(jTableAgendamento);
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
-        jButtonFinalizarAgeendamento.setText("FINALIZAR AGENDAMENTO");
-
-        jButtonCancelarAgendamento.setText("CANCELAR AGENDAMENTO");
+        jButtonAtenderAgendamento.setText("Atender Agendamento");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(53, 53, 53)
-                        .addComponent(jLabel2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextFieldAgendaPaciente, javax.swing.GroupLayout.PREFERRED_SIZE, 378, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButtonBuscarAgendaPaciente)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel6)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jComboBoxAgendaTurno, javax.swing.GroupLayout.PREFERRED_SIZE, 234, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addContainerGap(44, Short.MAX_VALUE)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 856, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel3)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(44, 44, 44)
-                                .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jButtonFinalizarAgeendamento)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jButtonCancelarAgendamento))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 389, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(197, 197, 197)
-                                .addComponent(jLabel4)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jDateChooser1, javax.swing.GroupLayout.DEFAULT_SIZE, 197, Short.MAX_VALUE))
-                            .addComponent(jTextField1))))
-                .addGap(46, 46, 46))
+                .addGap(65, 65, 65)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 748, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(51, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jButtonAtenderAgendamento, javax.swing.GroupLayout.PREFERRED_SIZE, 377, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(216, 216, 216))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(26, 26, 26)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(jTextFieldAgendaPaciente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButtonBuscarAgendaPaciente)
-                    .addComponent(jLabel6)
-                    .addComponent(jComboBoxAgendaTurno, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel3)
-                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel4))
-                    .addComponent(jDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel5))
-                .addGap(32, 32, 32)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButtonFinalizarAgeendamento)
-                    .addComponent(jButtonCancelarAgendamento))
-                .addContainerGap(92, Short.MAX_VALUE))
+                .addContainerGap()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 293, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(30, 30, 30)
+                .addComponent(jButtonAtenderAgendamento)
+                .addContainerGap(93, Short.MAX_VALUE))
         );
 
-        jLabel1.setFont(new java.awt.Font("Times New Roman", 0, 24)); // NOI18N
-        jLabel1.setText("Formulário de Agendamento");
+        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        jLabel1.setText("AGENDA");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(37, 37, 37)
+                .addGap(44, 44, 44)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(51, Short.MAX_VALUE))
+                .addContainerGap(49, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel1)
-                .addGap(372, 372, 372))
+                .addGap(432, 432, 432))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(15, 15, 15)
                 .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(44, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        setSize(new java.awt.Dimension(1054, 592));
+        setSize(new java.awt.Dimension(977, 563));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButtonBuscarAgendaPacienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBuscarAgendaPacienteActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButtonBuscarAgendaPacienteActionPerformed
-
-     public void preencherTabela(String Sql) throws ClassNotFoundException, SQLException{
-        ArrayList dados = new ArrayList();
-        String[] colunas = new String[]{"ID","Nome","Telefone","RG","Bairro"};
-        
-        conecta.conect();
-        conecta.executaSql(Sql);
-        
-        try{
-            conecta.rs.first();
-            do {                
-                dados.add(new Object[]{
-                    conecta.rs.getInt("idPaciente"),
-                    conecta.rs.getString("pac_nome"),
-                    conecta.rs.getString("pac_telefone"),
-                    conecta.rs.getString("pac_rg"),
-                    conecta.rs.getString("pac_bairro"),
-                });
-            } while (conecta.rs.next());
-        }catch(SQLException ex){
-            JOptionPane.showMessageDialog(rootPane, "erro ao preencher arraylist"+ex.getMessage());
-        }
-        ModeloTabela modelo = new ModeloTabela(dados, colunas);
-        
-        jTableAgenda.setModel(modelo);
-        jTableAgenda.getColumnModel().getColumn(0).setPreferredWidth(80); // O zero significa qua é a primeira coluna do array
-        jTableAgenda.getColumnModel().getColumn(0).setResizable(false);    // não pode ser modificado o tamanho da coluna
-        jTableAgenda.getColumnModel().getColumn(1).setPreferredWidth(228); // O zero significa qua é a primeira coluna do array
-        jTableAgenda.getColumnModel().getColumn(1).setResizable(false);    // não pode ser modificado o tamanho da coluna
-        jTableAgenda.getColumnModel().getColumn(2).setPreferredWidth(121); // O zero significa qua é a primeira coluna do array
-        jTableAgenda.getColumnModel().getColumn(2).setResizable(false);    // não pode ser modificado o tamanho da coluna
-        jTableAgenda.getColumnModel().getColumn(3).setPreferredWidth(140); // O zero significa qua é a primeira coluna do array
-        jTableAgenda.getColumnModel().getColumn(3).setResizable(false);    // não pode ser modificado o tamanho da coluna
-        jTableAgenda.getColumnModel().getColumn(4).setPreferredWidth(140); // O zero significa qua é a primeira coluna do array
-        jTableAgenda.getColumnModel().getColumn(4).setResizable(false);    // não pode ser modificado o tamanho da coluna
-        jTableAgenda.getTableHeader().setReorderingAllowed(false);   // não pode reordenar a tabela
-        jTableAgenda.setAutoResizeMode(jTableAgenda.AUTO_RESIZE_OFF); // tabela não pode redimensionada
-        jTableAgenda.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);  // só seleciona um campo por vez
-        conecta.desconecta();
-        
-        
-    }
+    /**
+     * @param args the command line arguments
+     */
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -266,28 +212,22 @@ public class FormAgenda extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new FormAgenda().setVisible(true);
+                try {
+                    new FormAgenda().setVisible(true);
+                } catch (ClassNotFoundException ex) {
+                    Logger.getLogger(FormAgenda.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (SQLException ex) {
+                    Logger.getLogger(FormAgenda.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButtonBuscarAgendaPaciente;
-    private javax.swing.JButton jButtonCancelarAgendamento;
-    private javax.swing.JButton jButtonFinalizarAgeendamento;
-    private javax.swing.JComboBox jComboBox1;
-    private javax.swing.JComboBox jComboBoxAgendaTurno;
-    private com.toedter.calendar.JDateChooser jDateChooser1;
+    private javax.swing.JButton jButtonAtenderAgendamento;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTableAgenda;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextFieldAgendaPaciente;
+    private javax.swing.JTable jTableAgendamento;
     // End of variables declaration//GEN-END:variables
 }

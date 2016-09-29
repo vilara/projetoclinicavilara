@@ -1144,6 +1144,7 @@ public class FormPaciente extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
+              
                 try {
                     new FormPaciente().setVisible(true);
                 } catch (ClassNotFoundException ex) {
@@ -1151,6 +1152,7 @@ public class FormPaciente extends javax.swing.JFrame {
                 } catch (SQLException ex) {
                     Logger.getLogger(FormPaciente.class.getName()).log(Level.SEVERE, null, ex);
                 }
+          
             }
         });
     }

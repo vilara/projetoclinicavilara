@@ -10,7 +10,6 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import util.ConexaoBD;
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 /**
@@ -19,6 +18,7 @@ import javax.swing.JOptionPane;
  */
 public class TelaPrincipal extends javax.swing.JFrame {
    ConexaoBD conecta = new ConexaoBD();
+  
     /**
      * Creates new form TelaPrincipal
      */
@@ -111,6 +111,11 @@ public class TelaPrincipal extends javax.swing.JFrame {
 
         jButtonAgendamento.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/Agenda.png"))); // NOI18N
         jButtonAgendamento.setToolTipText("Agendamento");
+        jButtonAgendamento.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonAgendamentoActionPerformed(evt);
+            }
+        });
         jPanelInternal.add(jButtonAgendamento);
         jButtonAgendamento.setBounds(20, 200, 100, 110);
 
@@ -295,6 +300,25 @@ public class TelaPrincipal extends javax.swing.JFrame {
             Logger.getLogger(TelaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
         } 
     }//GEN-LAST:event_jMenuCadPacienteActionPerformed
+
+    private void jButtonAgendamentoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAgendamentoActionPerformed
+            
+       try {
+           FormAgendamento telaAgenda = new FormAgendamento();
+           if(telaAgenda == null){  // usado para não deixar abrir mais de uma tela de usuário
+           
+               telaAgenda.setVisible(true);
+               telaAgenda.setResizable(false);
+           }else{
+               telaAgenda.setVisible(true);
+               telaAgenda.setResizable(false);
+           }
+       } catch (ClassNotFoundException ex) {
+           Logger.getLogger(TelaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+       } catch (SQLException ex) {
+           Logger.getLogger(TelaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+       }
+    }//GEN-LAST:event_jButtonAgendamentoActionPerformed
 
     /**
      * @param args the command line arguments
