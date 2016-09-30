@@ -5,6 +5,7 @@
  */
 package core;
 
+import dao.DaoAgenda;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -26,6 +27,10 @@ public class FormAgenda extends javax.swing.JFrame {
 
     ConexaoBD conecta = new ConexaoBD();
     BeansAgenda mod = new BeansAgenda();
+    BeansAgenda agen = new BeansAgenda();
+    DaoAgenda daoagenda = new DaoAgenda();
+     String dtHoje;
+     String status;
 
     /**
      * Creates new form FormAgenda
@@ -37,10 +42,11 @@ public class FormAgenda extends javax.swing.JFrame {
         SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd");
         dateformat.format(d);
 
-        String dtHoje;
+        
+       
         dtHoje = dateformat.format(d); // data de hoje
 
-        String status = "Aberto";
+         status = "Aberto";
       //  JOptionPane.showMessageDialog(null, dtHoje);
         preencherTabela("SELECT * FROM projetoclinicavilara.agendamento INNER JOIN pacientes "
                 + "ON agendamento.agenda_codpac = pacientes.idPaciente INNER JOIN medicos "
@@ -69,7 +75,7 @@ public class FormAgenda extends javax.swing.JFrame {
                     conecta.rs.getString("nome_medico"),});
             } while (conecta.rs.next());
         } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(rootPane, "erro ao preencher arraylist" + ex.getMessage());
+               JOptionPane.showMessageDialog(null, "Não existe atendimento para hoje");
         }
         ModeloTabela modelo = new ModeloTabela(dados, colunas);
 
@@ -125,9 +131,19 @@ public class FormAgenda extends javax.swing.JFrame {
 
             }
         ));
+        jTableAgendamento.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTableAgendamentoMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(jTableAgendamento);
 
         jButtonAtenderAgendamento.setText("Atender Agendamento");
+        jButtonAtenderAgendamento.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonAtenderAgendamentoActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -181,6 +197,42 @@ public class FormAgenda extends javax.swing.JFrame {
         setSize(new java.awt.Dimension(977, 563));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jTableAgendamentoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableAgendamentoMouseClicked
+      String id_agendamento = ""+jTableAgendamento.getValueAt(jTableAgendamento.getSelectedRow(), 0);
+        try {
+            conecta.conect();
+            conecta.executaSql("SELECT * FROM agendamento WHERE idAgenda="+id_agendamento+"");
+            conecta.rs.first();
+            agen.setAgenda_status("Atendimento");
+            agen.setIdAgenda(conecta.rs.getInt("idAgenda"));
+         
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(FormMedico.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(FormMedico.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        try {
+            conecta.desconecta();
+        } catch (SQLException ex) {
+            Logger.getLogger(FormMedico.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_jTableAgendamentoMouseClicked
+
+    private void jButtonAtenderAgendamentoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAtenderAgendamentoActionPerformed
+        try {
+            daoagenda.editarAgendamentoStatus(agen);
+             preencherTabela("SELECT * FROM projetoclinicavilara.agendamento INNER JOIN pacientes "
+                + "ON agendamento.agenda_codpac = pacientes.idPaciente INNER JOIN medicos "
+                + "ON agendamento.agenda_codmedico = medicos.idMedicos "
+                + "WHERE agendamento.agenda_data = '"+dtHoje+"'");
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(FormAgenda.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(FormAgenda.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_jButtonAtenderAgendamentoActionPerformed
 
     /**
      * @param args the command line arguments

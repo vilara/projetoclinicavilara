@@ -60,6 +60,22 @@ public class DaoAgenda {
        
         conex.desconecta();
     }
+      
+       public void editarAgendamentoStatus(BeansAgenda usu) throws ClassNotFoundException, SQLException {
+        conex.conect();
+        try{
+         PreparedStatement stmt = conex.coc.prepareStatement("UPDATE agendamento SET agenda_status=? WHERE idAgenda=?");
+        
+        stmt.setString(1, usu.getAgenda_status());
+        stmt.setInt(2, usu.getIdAgenda());
+        stmt.execute();
+          JOptionPane.showMessageDialog(null, "Agendamento em atendimento");  
+        }catch(SQLException ex){
+             JOptionPane.showMessageDialog(null, "Erro ao alterar o status agendamento!"+ex.getMessage());    
+        }
+       
+        conex.desconecta();
+    }
     
       
         public void excluirAgendamento(BeansAgenda mod) throws ClassNotFoundException, SQLException{
