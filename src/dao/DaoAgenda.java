@@ -17,7 +17,7 @@ import util.ConexaoBD;
  */
 public class DaoAgenda {
 
-        
+        BeansAgenda agenda = new BeansAgenda();
     ConexaoBD conex = new ConexaoBD();
     
     public void salvarAgendamento(BeansAgenda usu) throws ClassNotFoundException, SQLException{
@@ -124,5 +124,28 @@ public class DaoAgenda {
     }
     
 
+        public BeansAgenda buscaAgendamentoPorCodigo(int cod) throws ClassNotFoundException, SQLException{
+        BeansAgenda agen = new BeansAgenda();
+        conex.conect();        // conecta com o banco de dados
+
+        conex.executaSql("SELECT * FROM agendamento INNER JOIN pacientes ON agenda_codpac = idPaciente "
+                + " INNER JOIN medicos ON agenda_codmedico = idMedicos WHERE idAgenda = " + cod);
+
+        try {
+            conex.rs.first();
+            agen.setIdAgenda(conex.rs.getInt("idAgenda"));
+            agen.setAgenda_nomePac(conex.rs.getString("pac_nome"));
+            agen.setAgenda_nomeMedico(conex.rs.getString("nome_medico"));
+            agen.setAgenda_motivo(conex.rs.getString("agenda_motivo"));
+            agen.setAgenda_PacienteDataNasc(conex.rs.getString("pac_nascimento"));
+        } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(null, "Erro ao buscar agendamento!");
+           
+        }
+
+        conex.desconecta();    // desconecta do banco de dados
+
+        return agen;
+    }
 
 }

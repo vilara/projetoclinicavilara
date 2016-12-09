@@ -11,6 +11,8 @@ package model;
  */
 public class BeansAgenda {
     
+    private String agenda_nomeMedico;
+    private String agenda_nomePac;
     private int idAgenda; 
     private int agenda_codpac; 
     private String agenda_turno;
@@ -18,6 +20,15 @@ public class BeansAgenda {
     private String agenda_data;
     private String agenda_motivo;
     private String agenda_status;
+    private String agenda_PacienteDataNasc;
+
+    public String getAgenda_PacienteDataNasc() {
+        return agenda_PacienteDataNasc;
+    }
+
+    public void setAgenda_PacienteDataNasc(String agenda_PacienteDataNasc) {
+        this.agenda_PacienteDataNasc = agenda_PacienteDataNasc;
+    }
 
     /**
      * @return the idAgenda
@@ -115,6 +126,34 @@ public class BeansAgenda {
      */
     public void setAgenda_status(String agenda_status) {
         this.agenda_status = agenda_status;
+    }
+
+    /**
+     * @return the agenda_nomeMedico
+     */
+    public String getAgenda_nomeMedico() {
+        return agenda_nomeMedico;
+    }
+
+    /**
+     * @param agenda_nomeMedico the agenda_nomeMedico to set
+     */
+    public void setAgenda_nomeMedico(String agenda_nomeMedico) {
+        this.agenda_nomeMedico = agenda_nomeMedico;
+    }
+
+    /**
+     * @return the agenda_nomePac
+     */
+    public String getAgenda_nomePac() {
+        return agenda_nomePac;
+    }
+
+    /**
+     * @param agenda_nomePac the agenda_nomePac to set
+     */
+    public void setAgenda_nomePac(String agenda_nomePac) {
+        this.agenda_nomePac = agenda_nomePac;
     }
                     
     

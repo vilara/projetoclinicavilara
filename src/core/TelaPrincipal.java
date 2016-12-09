@@ -64,6 +64,9 @@ public class TelaPrincipal extends javax.swing.JFrame {
         jMenuRelatorios = new javax.swing.JMenu();
         jMenuFerramentas = new javax.swing.JMenu();
         jMenuItemTelaBemVindo = new javax.swing.JMenuItem();
+        jMenu1 = new javax.swing.JMenu();
+        jMenuItem1 = new javax.swing.JMenuItem();
+        jMenuItem2 = new javax.swing.JMenuItem();
         jMenuSair = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -161,6 +164,11 @@ public class TelaPrincipal extends javax.swing.JFrame {
         jMenuCadastro.add(jMenuItemCadMedico);
 
         jMenuCadClientes.setText("Clientes");
+        jMenuCadClientes.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuCadClientesActionPerformed(evt);
+            }
+        });
         jMenuCadastro.add(jMenuCadClientes);
 
         jMenuCadPaciente.setText("Paciente");
@@ -195,6 +203,26 @@ public class TelaPrincipal extends javax.swing.JFrame {
         jMenuFerramentas.add(jMenuItemTelaBemVindo);
 
         jMenuBar1.add(jMenuFerramentas);
+
+        jMenu1.setText("Agenda");
+
+        jMenuItem1.setText("Agenda hoje");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem1);
+
+        jMenuItem2.setText("Agenda médico");
+        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem2ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem2);
+
+        jMenuBar1.add(jMenu1);
 
         jMenuSair.setText("Sair");
         jMenuSair.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -320,6 +348,32 @@ public class TelaPrincipal extends javax.swing.JFrame {
        }
     }//GEN-LAST:event_jButtonAgendamentoActionPerformed
 
+    private void jMenuCadClientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuCadClientesActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jMenuCadClientesActionPerformed
+
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+       try {
+           FormAgenda tela = new FormAgenda();
+           tela.setVisible(true);
+       } catch (ClassNotFoundException ex) {
+           Logger.getLogger(TelaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+       } catch (SQLException ex) {
+           Logger.getLogger(TelaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+       }
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
+
+    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
+       try {
+           FormAgendaMedico tela = new FormAgendaMedico();
+           tela.setVisible(true);
+       } catch (ClassNotFoundException ex) {
+           Logger.getLogger(TelaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+       } catch (SQLException ex) {
+           Logger.getLogger(TelaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+       }
+    }//GEN-LAST:event_jMenuItem2ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -368,12 +422,15 @@ public class TelaPrincipal extends javax.swing.JFrame {
     private javax.swing.JLabel jLabelFundo;
     private javax.swing.JLabel jLabelFundoPrincipal;
     private javax.swing.JLabel jLabelTipoUsu;
+    private javax.swing.JMenu jMenu1;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuCadClientes;
     private javax.swing.JMenuItem jMenuCadPaciente;
     private javax.swing.JMenuItem jMenuCadUsuarios;
     private javax.swing.JMenu jMenuCadastro;
     private javax.swing.JMenu jMenuFerramentas;
+    private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItemCadMedico;
     private javax.swing.JMenuItem jMenuItemTelaBemVindo;
     private javax.swing.JMenu jMenuRelatorios;

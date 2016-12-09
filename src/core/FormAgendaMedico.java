@@ -7,15 +7,18 @@ package core;
 
 import static core.FormAgendamento.listaMedico;
 import static core.FormPaciente.listaEstado;
+import dao.DaoAgenda;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.ListSelectionModel;
+import model.BeansAgenda;
 import model.ModeloTabela;
 import util.ConexaoBD;
 
@@ -26,9 +29,12 @@ import util.ConexaoBD;
 public class FormAgendaMedico extends javax.swing.JFrame {
 
     ConexaoBD conecta = new ConexaoBD();
+    BeansAgenda agen = new BeansAgenda();
+    DaoAgenda daoagenda = new DaoAgenda();
+    String cod_agenda;
 
     // esta lista será utilizada para armazenar os id dos estados 
-    static ArrayList listaMedico = new ArrayList();
+    static List listaMedico = new ArrayList();
 
     String dtHoje;
     String status;
@@ -38,7 +44,16 @@ public class FormAgendaMedico extends javax.swing.JFrame {
      */
     public FormAgendaMedico() throws ClassNotFoundException, SQLException {
         initComponents();
+        Calendar data = Calendar.getInstance();
+        Date d = data.getTime();
+        SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd");
+        dateformat.format(d);
 
+        
+       
+        dtHoje = dateformat.format(d); // data de hoje
+        
+        status = "Atendimento";
         preencherMedico();
 
     }
@@ -100,9 +115,19 @@ public class FormAgendaMedico extends javax.swing.JFrame {
 
             }
         ));
+        jTableAgendaPaciente.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTableAgendaPacienteMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(jTableAgendaPaciente);
 
         jButton1.setText("Atender");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jLabel3.setText("Agendamento paciente");
 
@@ -118,24 +143,21 @@ public class FormAgendaMedico extends javax.swing.JFrame {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(55, 55, 55)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(304, 304, 304)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(55, 55, 55)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 702, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jLabel3)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jButtonBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addComponent(jLabel2)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jComboBoxMedicos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addGap(50, 50, 50)))))
+                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 702, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 702, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                            .addComponent(jLabel3)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addComponent(jButtonBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(jPanel1Layout.createSequentialGroup()
+                                    .addComponent(jLabel2)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(jComboBoxMedicos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGap(50, 50, 50))))
                 .addContainerGap(51, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -154,7 +176,7 @@ public class FormAgendaMedico extends javax.swing.JFrame {
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 282, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jButton1)
-                .addContainerGap(72, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -178,7 +200,7 @@ public class FormAgendaMedico extends javax.swing.JFrame {
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(22, Short.MAX_VALUE))
         );
 
         setSize(new java.awt.Dimension(903, 545));
@@ -187,15 +209,7 @@ public class FormAgendaMedico extends javax.swing.JFrame {
 
     private void jButtonBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBuscarActionPerformed
 
-        try {
-            Calendar data = Calendar.getInstance();
-            Date d = data.getTime();
-            SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd");
-            dateformat.format(d);
-            
-            dtHoje = dateformat.format(d); // data de hoje
-            
-            status = "Atendimento";
+        try {        
             
             // pega o índice da lista baseado no index do combobox menos 1 e insere na lista que armazena os id dos estados
             int idMedico = (int) listaMedico.get(jComboBoxMedicos.getSelectedIndex() - 1);
@@ -208,9 +222,9 @@ public class FormAgendaMedico extends javax.swing.JFrame {
                     + "AND agendamento.agenda_codmedico = "+idMedico+" "
                     + "AND agendamento.agenda_status = '"+status+"'");
         } catch (ClassNotFoundException ex) {
-              JOptionPane.showMessageDialog(null, "Não existe atendimento para hoje");
+              JOptionPane.showMessageDialog(null, "Não existem agendamentos para este médico");
         } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(null, "Não existe atendimento para hoje");
+            JOptionPane.showMessageDialog(null, "Não existem agendamentos para este médico");
         }
 
 
@@ -219,6 +233,26 @@ public class FormAgendaMedico extends javax.swing.JFrame {
     private void jComboBoxMedicosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxMedicosActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jComboBoxMedicosActionPerformed
+
+    private void jTableAgendaPacienteMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableAgendaPacienteMouseClicked
+     // pega o índice da lista baseado no index do combobox menos 1 e insere na lista que armazena os id dos médicos
+        cod_agenda = ""+jTableAgendaPaciente.getValueAt(jTableAgendaPaciente.getSelectedRow(), 0);
+      
+                    
+
+    }//GEN-LAST:event_jTableAgendaPacienteMouseClicked
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        try {
+            FormConsulta tela = new FormConsulta(cod_agenda);
+            tela.setVisible(true);
+            this.dispose();
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(FormAgendaMedico.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(FormAgendaMedico.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     public void preencherTabela(String Sql) throws ClassNotFoundException, SQLException {
         ArrayList dados = new ArrayList();

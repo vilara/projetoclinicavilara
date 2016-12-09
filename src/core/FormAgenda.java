@@ -30,7 +30,7 @@ public class FormAgenda extends javax.swing.JFrame {
     BeansAgenda agen = new BeansAgenda();
     DaoAgenda daoagenda = new DaoAgenda();
      String dtHoje;
-     String status;
+     String status = "Aberto";
 
     /**
      * Creates new form FormAgenda
@@ -45,8 +45,8 @@ public class FormAgenda extends javax.swing.JFrame {
         
        
         dtHoje = dateformat.format(d); // data de hoje
-
-         status = "Aberto";
+       
+        
       //  JOptionPane.showMessageDialog(null, dtHoje);
         preencherTabela("SELECT * FROM projetoclinicavilara.agendamento INNER JOIN pacientes "
                 + "ON agendamento.agenda_codpac = pacientes.idPaciente INNER JOIN medicos "
@@ -201,11 +201,13 @@ public class FormAgenda extends javax.swing.JFrame {
     private void jTableAgendamentoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableAgendamentoMouseClicked
       String id_agendamento = ""+jTableAgendamento.getValueAt(jTableAgendamento.getSelectedRow(), 0);
         try {
+            
             conecta.conect();
             conecta.executaSql("SELECT * FROM agendamento WHERE idAgenda="+id_agendamento+"");
             conecta.rs.first();
             agen.setAgenda_status("Atendimento");
             agen.setIdAgenda(conecta.rs.getInt("idAgenda"));
+       //     JOptionPane.showMessageDialog(rootPane, conecta.rs.getInt("idAgenda"));
          
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(FormMedico.class.getName()).log(Level.SEVERE, null, ex);
@@ -222,11 +224,13 @@ public class FormAgenda extends javax.swing.JFrame {
 
     private void jButtonAtenderAgendamentoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAtenderAgendamentoActionPerformed
         try {
+        
             daoagenda.editarAgendamentoStatus(agen);
              preencherTabela("SELECT * FROM projetoclinicavilara.agendamento INNER JOIN pacientes "
                 + "ON agendamento.agenda_codpac = pacientes.idPaciente INNER JOIN medicos "
                 + "ON agendamento.agenda_codmedico = medicos.idMedicos "
-                + "WHERE agendamento.agenda_data = '"+dtHoje+"'");
+                + "WHERE agendamento.agenda_data = '"+dtHoje+"'"
+                + "AND agendamento.agenda_status = '"+status+"'");
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(FormAgenda.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SQLException ex) {
